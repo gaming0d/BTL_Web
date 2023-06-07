@@ -1,3 +1,11 @@
+# Project requirement
+
+After clone this project we need to install react-admin to run this project.
+
+Install terminal:
+
+  npm install react-admin.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
