@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const UploadVehicle = () => {
+export default function UploadVehicle() {
   const [file, setFile] = useState(null);
-
+  console.log('hi')
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
@@ -48,5 +48,3 @@ const UploadVehicle = () => {
     </div>
   );
 };
-
-export default UploadVehicle;
