@@ -9,6 +9,7 @@ import MonthlyReport from './components/Reports/MonthlyReport';
 import ExpiringVehicles from './components/Reports/ExpiringVehicles';
 import './App.css'; // Import CSS từ tệp App.css
 import Mainpage from './components/Office/Mainpage';
+import CarList from './components/Vehicles/CarList';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/monthly-report" element={<MonthlyReport />} />
         <Route path="/expiring-vehicles" element={<ExpiringVehicles />} />
         <Route path="/cuc/mainpage" element={<Mainpage/>} />
+        <Route path="/CarList" element={<CarList/>} />
       </Routes>
     </Router>
   );
