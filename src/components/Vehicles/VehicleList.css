@@ -1,0 +1,67 @@
+.App {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .menu {
+    width: 200px;
+    background-color: #f7f7f7;
+    transition: transform 0.3s;
+    transform: translateX(0);
+    overflow: hidden;
+  }
+  
+  .menu.open {
+    transform: translateX(-200px);
+  }
+  
+  .menu-title {
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  
+  .menu-button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+  }
+  
+  .table-header {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .search {
+    margin-bottom: 10px;
+  }
+  
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .toggle-menu-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    border: none;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+  
