@@ -27,16 +27,18 @@ const Car = ({ customers }) => {
   };
   
   const handleSave = async (registrationNumber) => {
-    const updatedCar = cars.map((car) => {
-      if (car.registration_number === registrationNumber) {
-        return { ...car, ...editedCar }; // Merge the updated values into the existing car object
-      }
-      return car;
-    });
+    const carToUpdate = cars.find((car) => car.registration_number === registrationNumber);
+  
+    if (!carToUpdate) {
+      console.error(`Car with registration number ${registrationNumber} not found.`);
+      return;
+    }
+  
+    const updatedCar = { ...carToUpdate, ...editedCar };
   
     try {
       await axios.put(`http://localhost:8000/cars/${registrationNumber}/`, updatedCar);
-      setCars(updatedCar);
+      setCars((prevCars) => prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car)));
       setEditedCar(null);
       // Refresh the car list or show a success message
     } catch (error) {
@@ -44,6 +46,7 @@ const Car = ({ customers }) => {
       // Handle the error
     }
   };
+  
       
     const handleDelete = async (registrationNumber) => {
         try {
