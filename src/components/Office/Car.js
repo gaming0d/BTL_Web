@@ -5,8 +5,7 @@ import BaseLayout from './Base';
 const Car = ({ customers }) => {
   const [cars, setCars] = useState([]);
   const [editedCar, setEditedCar] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchAttribute, setSearchAttribute] = useState('registration_number');
+  const [searchTerms, setSearchTerms] = useState({});
 
   useEffect(() => {
     fetch('http://localhost:8000/cars/')
@@ -61,9 +60,20 @@ const Car = ({ customers }) => {
     }
   };
 
-  const filteredCars = cars.filter((car) =>
-    car[searchAttribute].toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleSearchChange = (e, attribute) => {
+    const value = e.target.value;
+    setSearchTerms((prevSearchTerms) => ({ ...prevSearchTerms, [attribute]: value }));
+  };
+
+  const filteredCars = cars.filter((car) => {
+    for (const attribute in searchTerms) {
+      const searchTerm = searchTerms[attribute];
+      if (searchTerm && !car[attribute].toLowerCase().includes(searchTerm.toLowerCase())) {
+        return false;
+      }
+    }
+    return true;
+  });
 
   return (
     <BaseLayout>
@@ -71,20 +81,6 @@ const Car = ({ customers }) => {
         <div className="panel panel-primary">
           <div className="panel-heading">
             <h6 className="panel-title">Cars</h6>
-          </div>
-          <div className="search-container">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search..."
-            />
-            <select value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)}>
-              <option value="registration_number">Registration Number</option>
-              <option value="registration_date">Registration Date</option>
-              <option value="license_plate">License Plate</option>
-              {/* Add more options for other attributes */}
-            </select>
           </div>
           <table className="table table-hover" id="dev-table">
             <thead>
@@ -112,6 +108,177 @@ const Car = ({ customers }) => {
                 <th>Owner</th>
                 <th>Actions</th>
               </tr>
+              <tr>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Registration Number"
+                    onChange={(e) => handleSearchChange(e, 'registration_number')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Registration Date"
+                    onChange={(e) => handleSearchChange(e, 'registration_date')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search License Plate"
+                    onChange={(e) => handleSearchChange(e, 'license_plate')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Registered Location"
+                    onChange={(e) => handleSearchChange(e, 'registered_location')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Manufacturer"
+                    onChange={(e) => handleSearchChange(e, 'manufacturer')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Model"
+                    onChange={(e) => handleSearchChange(e, 'model')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Version"
+                    onChange={(e) => handleSearchChange(e, 'version')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Engine Capacity"
+                    onChange={(e) => handleSearchChange(e, 'engine_capacity')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Power"
+                    onChange={(e) => handleSearchChange(e, 'power')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Torque"
+                    onChange={(e) => handleSearchChange(e, 'torque')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Transmission"
+                    onChange={(e) => handleSearchChange(e, 'transmission')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Seating Capacity"
+                    onChange={(e) => handleSearchChange(e, 'seating_capacity')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Length"
+                    onChange={(e) => handleSearchChange(e, 'length')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Width"
+                    onChange={(e) => handleSearchChange(e, 'width')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Height"
+                    onChange={(e) => handleSearchChange(e, 'height')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Weight"
+                    onChange={(e) => handleSearchChange(e, 'weight')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Fuel Consumption"
+                    onChange={(e) => handleSearchChange(e, 'fuel_consumption')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Suspension"
+                    onChange={(e) => handleSearchChange(e, 'suspension')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Braking System"
+                    onChange={(e) => handleSearchChange(e, 'braking_system')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Purpose"
+                    onChange={(e) => handleSearchChange(e, 'purpose')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Search Owner"
+                    onChange={(e) => handleSearchChange(e, 'owner')}
+                  />
+                </th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
               {filteredCars.map((car, index) => (
@@ -132,10 +299,7 @@ const Car = ({ customers }) => {
                   ))}
                   <td>
                     {editedCar === car ? (
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleSave(car.registration_number)}
-                      >
+                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
                         Save
                       </button>
                     ) : (
@@ -143,10 +307,7 @@ const Car = ({ customers }) => {
                         Edit
                       </button>
                     )}
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(car.registration_number)}
-                    >
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
                       Delete
                     </button>
                   </td>
