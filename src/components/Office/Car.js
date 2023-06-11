@@ -268,6 +268,20 @@ const Car = ({ customers }) => {
                       </div>
                     )}
                   </td>
+                  <td>
+                    {editedCar === car ? (
+                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                        Save
+                      </button>
+                    ) : (
+                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
+                        Edit
+                      </button>
+                    )}
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
