@@ -4,6 +4,11 @@ import axios from 'axios';
 const ExpiringVehicles = () => {
   const [expiringVehicles, setExpiringVehicles] = useState([]);
 
+  const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const handleToggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   useEffect(() => {
     const fetchExpiringVehicles = async () => {
       const response = await axios.get('http://localhost:3001/vehicles/expiring');
