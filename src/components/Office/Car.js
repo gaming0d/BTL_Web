@@ -6,6 +6,7 @@ const Car = ({ customers }) => {
   const [cars, setCars] = useState([]);
   const [editedCar, setEditedCar] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchAttribute, setSearchAttribute] = useState('registration_number');
 
   useEffect(() => {
     fetch('http://localhost:8000/cars/')
@@ -39,7 +40,9 @@ const Car = ({ customers }) => {
 
     try {
       await axios.put(`http://localhost:8000/cars/${registrationNumber}/`, updatedCar);
-      setCars((prevCars) => prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car)));
+      setCars((prevCars) =>
+        prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car))
+      );
       setEditedCar(null);
       // Refresh the car list or show a success message
     } catch (error) {
@@ -47,7 +50,6 @@ const Car = ({ customers }) => {
       // Handle the error
     }
   };
-
 
   const handleDelete = async (registrationNumber) => {
     try {
@@ -60,7 +62,7 @@ const Car = ({ customers }) => {
   };
 
   const filteredCars = cars.filter((car) =>
-    car.registration_number.toLowerCase().includes(searchTerm.toLowerCase())
+    car[searchAttribute].toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -70,13 +72,19 @@ const Car = ({ customers }) => {
           <div className="panel-heading">
             <h6 className="panel-title">Cars</h6>
           </div>
-          <div className="search-bar">
+          <div className="search-container">
             <input
               type="text"
-              placeholder="Search by Registration Number"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search..."
             />
+            <select value={searchAttribute} onChange={(e) => setSearchAttribute(e.target.value)}>
+              <option value="registration_number">Registration Number</option>
+              <option value="registration_date">Registration Date</option>
+              <option value="license_plate">License Plate</option>
+              {/* Add more options for other attributes */}
+            </select>
           </div>
           <table className="table table-hover" id="dev-table">
             <thead>
@@ -108,25 +116,6 @@ const Car = ({ customers }) => {
             <tbody>
               {filteredCars.map((car, index) => (
                 <tr key={car.registration_number}>
-                  {/* ...render table data for each car... */}
-                  <td>
-                    {editedCar === car ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
-                        Save
-                      </button>
-                    ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
-                        Edit
-                      </button>
-                    )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {cars.map((car, index) => (
-                <tr key={car.registration_number}>
                   {Object.entries(car).map(([key, value]) => (
                     <td key={key}>
                       {editedCar === car ? (
@@ -143,7 +132,10 @@ const Car = ({ customers }) => {
                   ))}
                   <td>
                     {editedCar === car ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => handleSave(car.registration_number)}
+                      >
                         Save
                       </button>
                     ) : (
@@ -151,7 +143,10 @@ const Car = ({ customers }) => {
                         Edit
                       </button>
                     )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(car.registration_number)}
+                    >
                       Delete
                     </button>
                   </td>
