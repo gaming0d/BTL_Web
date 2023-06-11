@@ -1,28 +1,42 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Common/Navbar';
-import Sidebar from './components/Common/Sidebar';
-import Login from './components/Authentication/Login';
-import VehicleList from './components/Vehicles/VehicleList';
-import UploadVehicle from './components/Vehicles/UploadVehicle';
-import MonthlyReport from './components/Reports/MonthlyReport';
-import ExpiringVehicles from './components/Reports/ExpiringVehicles';
-import './App.css'; // Import CSS từ tệp App.css
-import Mainpage from './components/Office/Mainpage';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const App = () => {
+const ExpiringVehicles = () => {
+  const [expiringVehicles, setExpiringVehicles] = useState([]);
+
+  useEffect(() => {
+    const fetchExpiringVehicles = async () => {
+      const response = await axios.get('http://localhost:3001/vehicles/expiring');
+      setExpiringVehicles(response.data);
+    };
+    fetchExpiringVehicles();
+  }, []);
+
   return (
-    <Router>
-      <Routes>
-        <Route exact path="/" element={<Login />} />
-        <Route path="/vehicles" element={<VehicleList/>} />
-        <Route path="/upload-vehicle" element={<UploadVehicle />} />
-        <Route path="/monthly-report" element={<MonthlyReport />} />
-        <Route path="/expiring-vehicles" element={<ExpiringVehicles />} />
-        <Route path="/cuc/mainpage" element={<Mainpage/>} />
-      </Routes>
-    </Router>
+    <div className="container">
+      <h2 className="mt-4">Xe Sắp Hết Hạn</h2>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Biển Số</th>
+            <th>Loại Xe</th>
+            <th>Hãng Xe</th>
+            <th>Ngày Đăng Kiểm</th>
+          </tr>
+        </thead>
+        <tbody>
+          {expiringVehicles.map((vehicle) => (
+            <tr key={vehicle.id}>
+              <td>{vehicle.plateNumber}</td>
+              <td>{vehicle.type}</td>
+              <td>{vehicle.brand}</td>
+              <td>{vehicle.inspectionDate}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 
-export default App;
+export default ExpiringVehicles;

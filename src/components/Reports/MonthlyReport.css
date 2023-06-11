@@ -1,0 +1,18 @@
+.container {
+    margin-top: 20px;
+  }
+  
+  .table {
+    width: 100%;
+  }
+  
+  .table th,
+  .table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .mt-4 {
+    margin-top: 4px;
+  }
+  

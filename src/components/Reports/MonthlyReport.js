@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './MonthlyReport.css'; // Import tệp CSS từ tệp MonthlyReport.css
 
 const MonthlyReport = () => {
   const [reportData, setReportData] = useState([]);
