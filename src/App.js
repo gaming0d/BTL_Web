@@ -12,7 +12,7 @@ import CarList from './components/Vehicles/CarList';
 import Car from './components/Office/Car'
 import Owner from './components/Office/Owner'
 import Inspection from "./components/Office/Inspection"
-
+import CarForm from './components/Office/add';
 const App = () => {
   return (
     <Router>
@@ -26,6 +26,7 @@ const App = () => {
         <Route path="/cuc/listofcar" element={<Car/>} />
         <Route path="/cuc/listofowner" element={<Owner/>} />
         <Route path="/cuc/listofinspection" element={<Inspection/>}/>
+        <Route path="/cuc/add" element = {<CarForm/>}/>
       </Routes> 
     </Router>
     // <a href="/cuc/dashboard"><i className="fas fa-tachometer-alt"></i><span>Dashboard</span></a>

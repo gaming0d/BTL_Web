@@ -1,18 +1,60 @@
-
-import BaseLayout from './Base';
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import BaseLayout from './Base';
 
 const Car = ({ customers }) => {
     const [cars, setCars] = useState([]);
+    const [editedCar, setEditedCar] = useState(null);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/cars/')
+        fetch('http://localhost:8000/cars/')
         .then((response) => response.json())
         .then((data) => setCars(data))
         .catch((error) => console.log(error));
     }, []);
 
+    const handleEdit = (car) => {
+    setEditedCar(car);
+  };
+
+  const handleInputChange = (e, index) => {
+    const { name, value } = e.target;
+    setCars((prevCars) => {
+      const updatedCars = [...prevCars];
+      updatedCars[index] = { ...updatedCars[index], [name]: value };
+      return updatedCars;
+    });
+  };
+  
+  const handleSave = async (registrationNumber) => {
+    const updatedCar = cars.map((car) => {
+      if (car.registration_number === registrationNumber) {
+        return { ...car, ...editedCar }; // Merge the updated values into the existing car object
+      }
+      return car;
+    });
+  
+    try {
+      await axios.put(`http://localhost:8000/cars/${registrationNumber}/`, updatedCar);
+      setCars(updatedCar);
+      setEditedCar(null);
+      // Refresh the car list or show a success message
+    } catch (error) {
+      console.error(error);
+      // Handle the error
+    }
+  };
+      
+    const handleDelete = async (registrationNumber) => {
+        try {
+        await axios.delete(`http://localhost:8000/cars/${registrationNumber}`);
+        // Refresh the car list or show a success message
+        } catch (error) {
+        console.error(error);
+        // Handle the error
+        }
+    };
+  
   return (
     <BaseLayout>
       <div className="container">
@@ -44,35 +86,43 @@ const Car = ({ customers }) => {
                 <th>Braking System</th>
                 <th>Purpose</th>
                 <th>Owner</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-            {cars.map((car) => (
-              <tr key={car.registration_number}>
-                <td>{car.registration_number}</td>
-                <td>{car.registration_date}</td>
-                <td>{car.license_plate}</td>
-                <td>{car.registered_location}</td>
-                <td>{car.manufacturer}</td>
-                <td>{car.model}</td>
-                <td>{car.version}</td>
-                <td>{car.engine_capacity}</td>
-                <td>{car.power}</td>
-                <td>{car.torque}</td>
-                <td>{car.transmission}</td>
-                <td>{car.seating_capacity}</td>
-                <td>{car.length}</td>
-                <td>{car.width}</td>
-                <td>{car.height}</td>
-                <td>{car.weight}</td>
-                <td>{car.fuel_consumption}</td>
-                <td>{car.suspension}</td>
-                <td>{car.braking_system}</td>
-                <td>{car.purpose}</td>
-                <td>{car.owner}</td>
-              </tr>
+            {cars.map((car, index) => (
+                <tr key={car.registration_number}>
+                {Object.entries(car).map(([key, value]) => (
+                    <td key={key}>
+                    {editedCar === car ? (
+                        <input
+                        type="text"
+                        name={key}
+                        value={value}
+                        onChange={(e) => handleInputChange(e, index)}
+                        />
+                    ) : (
+                        value
+                    )}
+                    </td>
+                ))}
+                <td>
+                    {editedCar === car ? (
+                    <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                        Save
+                    </button>
+                    ) : (
+                    <button className="btn btn-primary" onClick={() => handleEdit(car)}>
+                        Edit
+                    </button>
+                    )}
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
+                    Delete
+                    </button>
+                </td>
+                </tr>
             ))}
-          </tbody>
+            </tbody>
           </table>
         </div>
       </div>
