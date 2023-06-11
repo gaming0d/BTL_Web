@@ -61,8 +61,9 @@ const Car = ({ customers }) => {
 
   const handleDelete = async (registrationNumber) => {
     try {
-      await axios.delete(`http://localhost:8000/cars/${registrationNumber}`);
+      await axios.delete(`http://localhost:8000/cars/${registrationNumber}/`);
       // Refresh the car list or show a success message
+      setCars((prevCars) => prevCars.filter((car) => car.registration_number !== registrationNumber));
     } catch (error) {
       console.error(error);
       // Handle the error
