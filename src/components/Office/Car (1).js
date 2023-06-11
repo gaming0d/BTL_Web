@@ -20,8 +20,12 @@ const Car = ({ customers }) => {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCars((prevCars) => {
-      const updatedCars = [...prevCars];
-      updatedCars[index] = { ...updatedCars[index], [name]: value };
+      const updatedCars = prevCars.map((car, carIndex) => {
+        if (carIndex === index) {
+          return { ...car, [name]: value };
+        }
+        return car;
+      });
       return updatedCars;
     });
   };
@@ -92,40 +96,42 @@ const Car = ({ customers }) => {
                 <th>Actions</th>
               </tr>
             </thead>
+            
             <tbody>
-            {cars.map((car, index) => (
-                <tr key={car.registration_number}>
-                {Object.entries(car).map(([key, value]) => (
-                    <td key={key}>
-                    {editedCar === car ? (
-                        <input
-                        type="text"
-                        name={key}
-                        value={value}
-                        onChange={(e) => handleInputChange(e, index)}
-                        />
-                    ) : (
-                        value
-                    )}
-                    </td>
-                ))}
-                <td>
-                    {editedCar === car ? (
-                    <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
-                        Save
-                    </button>
-                    ) : (
-                    <button className="btn btn-primary" onClick={() => handleEdit(car)}>
-                        Edit
-                    </button>
-                    )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
-                    Delete
-                    </button>
-                </td>
-                </tr>
-            ))}
-            </tbody>
+  {cars.map((car, index) => (
+    <tr key={car.registration_number}>
+      {Object.entries(car).map(([key, value]) => (
+        <td key={key}>
+          {editedCar === index ? (
+            <input
+              type="text"
+              name={key}
+              value={value}
+              onChange={(e) => handleInputChange(e, index)}
+            />
+          ) : (
+            <span>{value}</span>
+          )}
+        </td>
+      ))}
+      <td>
+        {editedCar === index ? (
+          <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+            Save
+          </button>
+        ) : (
+          <button className="btn btn-primary" onClick={() => handleEdit(index)}>
+            Edit
+          </button>
+        )}
+        <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
         </div>
       </div>
