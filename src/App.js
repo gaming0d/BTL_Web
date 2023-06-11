@@ -7,13 +7,12 @@ import VehicleList from './components/Vehicles/VehicleList';
 import UploadVehicle from './components/Vehicles/UploadVehicle';
 import MonthlyReport from './components/Reports/MonthlyReport';
 import ExpiringVehicles from './components/Reports/ExpiringVehicles';
+import './App.css'; // Import CSS từ tệp App.css
 import CarList from './components/Vehicles/CarList';
 import Car from './components/Office/Car'
 import Owner from './components/Office/Owner'
 import Inspection from "./components/Office/Inspection"
 import CarForm from './components/Office/add';
-import './App.css';
-
 const App = () => {
   return (
     <Router>
