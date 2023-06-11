@@ -1,42 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Common/Navbar';
+import Sidebar from './components/Common/Sidebar';
+import Login from './components/Authentication/Login';
+import VehicleList from './components/Vehicles/VehicleList';
+import UploadVehicle from './components/Vehicles/UploadVehicle';
+import MonthlyReport from './components/Reports/MonthlyReport';
+import ExpiringVehicles from './components/Reports/ExpiringVehicles';
+import CarList from './components/Vehicles/CarList';
+import Car from './components/Office/Car'
+import Owner from './components/Office/Owner'
+import Inspection from "./components/Office/Inspection"
+import CarForm from './components/Office/add';
+import './App.css';
 
-const ExpiringVehicles = () => {
-  const [expiringVehicles, setExpiringVehicles] = useState([]);
-
-  useEffect(() => {
-    const fetchExpiringVehicles = async () => {
-      const response = await axios.get('http://localhost:3001/vehicles/expiring');
-      setExpiringVehicles(response.data);
-    };
-    fetchExpiringVehicles();
-  }, []);
-
+const App = () => {
   return (
-    <div className="container">
-      <h2 className="mt-4">Xe Sắp Hết Hạn</h2>
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Biển Số</th>
-            <th>Loại Xe</th>
-            <th>Hãng Xe</th>
-            <th>Ngày Đăng Kiểm</th>
-          </tr>
-        </thead>
-        <tbody>
-          {expiringVehicles.map((vehicle) => (
-            <tr key={vehicle.id}>
-              <td>{vehicle.plateNumber}</td>
-              <td>{vehicle.type}</td>
-              <td>{vehicle.brand}</td>
-              <td>{vehicle.inspectionDate}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Router>
+      <Routes>
+        <Route exact path="/" element={<Login />} />
+        <Route path="/vehicles" element={<VehicleList/>} />
+        <Route path="/upload-vehicle" element={<UploadVehicle />} />
+        <Route path="/monthly-report" element={<MonthlyReport />} />
+        <Route path="/expiring-vehicles" element={<ExpiringVehicles />} />
+        <Route path="/CarList" element={<CarList/>} />
+        <Route path="/cuc/listofcar" element={<Car/>} />
+        <Route path="/cuc/listofowner" element={<Owner/>} />
+        <Route path="/cuc/listofinspection" element={<Inspection/>}/>
+        <Route path="/cuc/add" element = {<CarForm/>}/>
+      </Routes> 
+    </Router>
+    // <a href="/cuc/dashboard"><i className="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+    // <a href="/cuc/listofcar"><i className="fab fa-product-hunt"></i><span>Car</span></a>
+    // <a href="/cuc/listofinspection"><i className="fas fa-history"></i><span>Inspection</span></a>
+    // <a href="/cuc/listofowner"><i className="fas fa-question-circle"></i><span>Owner</span></a>
+    // <a href="/cuc/add"><i className="fas fa-sync-alt"></i><span>Add</span></a>
   );
 };
 
-export default ExpiringVehicles;
+export default App;
