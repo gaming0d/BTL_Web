@@ -20,7 +20,7 @@ const BaseLayout = ({ customer, request, children }) => {
           <h3>Car Management </h3>
         </div>
         <div className="right_area">
-          <a href="/logout" className="logout_btn">Logout</a>
+          <a href="/" className="logout_btn">Logout</a>
         </div>
       </header>
 
@@ -30,6 +30,7 @@ const BaseLayout = ({ customer, request, children }) => {
         <a href="/cuc/listofinspection"><i className="fas fa-history"></i><span>Inspection</span></a>
         <a href="/cuc/listofowner"><i className="fas fa-question-circle"></i><span>Owner</span></a>
         <a href="/cuc/add"><i className="fas fa-sync-alt"></i><span>Add</span></a>
+        <a href="/cuc/account"><i className="fas fa-sync-alt"></i><span>Account</span></a>
       </div>
 
       <div className="content">

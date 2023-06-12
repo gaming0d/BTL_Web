@@ -1,53 +1,135 @@
-
-import BaseLayout from './Base';
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import BaseLayout from './Base';
 
-const Inspection = ({ customers }) => {
-    const [inspections, setInspections] = useState([]);
-
+const Owner = () => {
+    const [carOwners, setCarOwners] = useState([]);
+    const [editedCarOwner, setEditedCarOwner] = useState(null);
+    const [searchTerms, setSearchTerms] = useState([]);
+    const [searchAttributes, setSearchAttributes] = useState([
+      {
+        attribute: 'inspection_number',
+        value: ''
+      }
+    ]);
+  
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/car_inspections/')
+      fetch('http://localhost:8000/car_inspections/')
         .then((response) => response.json())
-        .then((data) => setInspections(data))
+        .then((data) => setCarOwners(data))
         .catch((error) => console.log(error));
     }, []);
-
-  return (
-    <BaseLayout>
-      <div className="container">
-        <div className="panel panel-primary">
-          <div className="panel-heading">
-            <h6 className="panel-title">Inspection</h6>
+  
+    const handleEdit = (carOwner) => {
+      setEditedCarOwner(carOwner);  
+    };
+  
+    const handleInputChange = (e, index) => {
+        const { name, value } = e.target;
+        setCarOwners((prevCars) => {
+          const updatedCars = prevCars.map((car, carIndex) => {
+            if (carIndex === index) {
+              return { ...car, [name]: value };
+            }
+            return car;
+          });
+          return updatedCars;
+        });
+      };
+    
+      const handleSave = async (inspection_number) => {
+        const carToUpdate = carOwners.find((car) => car.inspection_number === inspection_number);
+    
+        if (!carToUpdate) {
+          console.error(`Car with registration number ${inspection_number} not found.`);
+          return;
+        }
+    
+        const updatedCar = { ...carToUpdate, ...editedCarOwner};
+    
+        try {
+          await axios.put(`http://localhost:8000/car_inspections/${inspection_number}/`, updatedCar);
+          setCarOwners((prevCars) => prevCars.map((car) => (car.inspection_number === inspection_number ? updatedCar : car)));
+          setEditedCarOwner(null);
+          // Refresh the car list or show a success message
+        } catch (error) {
+          console.error(error);
+          // Handle the error
+        }
+      };
+  
+    const handleDelete = async (inspection_number) => {
+      try {
+        await axios.delete(`http://localhost:8000/car_inspections/${inspection_number}/`);
+        // Refresh the car owner list or show a success message
+        setCarOwners((prevCarOwners) =>
+          prevCarOwners.filter((carOwner) => carOwner.inspection_number!== inspection_number)
+        );
+      } catch (error) {
+        console.error(error);
+        // Handle the error
+      }
+    };
+  
+    return (
+        <BaseLayout>
+          <div className="container">
+            <div className="panel panel-primary">
+              <div className="panel-heading">
+                <h6 className="panel-title">Car Owners</h6>
+              </div>
+              <table className="table table-hover">
+              
+              <thead>
+  <tr>
+    <th>Inspection Number</th>
+    <th>Inspection Date</th>
+    <th>Expiration Date</th>
+    <th>Inspection Center</th>
+    <th>Car</th>
+    <th>Owner</th>
+    <th>Actions</th>
+  </tr>
+</thead>
+                <tbody>
+                {carOwners.map((carOwner, index) => (
+  <tr key={carOwner.inspection_number}>
+    {Object.entries(carOwner).map(([key, value]) => (
+      <td key={key}>
+        {editedCarOwner === index ? (
+          <input
+            type="text"
+            name={key}
+            value={value}
+            onChange={(e) => handleInputChange(e, index)}
+          />
+        ) : (
+          <span>{value}</span>
+        )}
+      </td>
+    ))}
+    <td>
+      {editedCarOwner === index ? (
+        <button className="btn btn-primary" onClick={() => handleSave(carOwner.inspection_number)}>
+          Save
+        </button>
+      ) : (
+        <button className="btn btn-primary" onClick={() => handleEdit(index)}>
+          Edit
+        </button>
+      )}
+      <button className="btn btn-danger" onClick={() => handleDelete(carOwner.inspection_number)}>
+        Delete
+      </button>
+    </td>
+  </tr>
+))}
+</tbody>
+              </table>
+            </div>
           </div>
-          <table className="table table-hover" id="dev-table">
-            <thead>
-                <tr>
-                <th>Inspection Number</th>
-                <th>Inspection Date</th>
-                <th>Expiration Date</th>
-                <th>Inspection Center</th>
-                <th>Car Registration Number</th>
-                <th>Owner</th>
-                </tr>
-            </thead>
-            <tbody>
-                {inspections.map((inspection) => (
-                <tr key={inspection.inspection_number}>
-                    <td>{inspection.inspection_number}</td>
-                    <td>{inspection.inspection_date}</td>
-                    <td>{inspection.expiration_date}</td>
-                    <td>{inspection.inspection_center}</td>
-                    <td>{inspection.car.registration_number}</td>
-                    <td>{inspection.owner.owner_type === 'agency' ? inspection.owner.agency_name : inspection.owner.individual_name}</td>
-                </tr>
-                ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </BaseLayout>
-  );
+        </BaseLayout>
+      );
 };
 
-export default Inspection;
+export default Owner;

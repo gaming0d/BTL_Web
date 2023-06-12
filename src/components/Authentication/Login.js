@@ -43,7 +43,7 @@ const Login = () => {
           if (selectedOption === 'center') {
             navigate('/center/mainpage');
           } else if (selectedOption === 'cuc') {
-            navigate('/cuc/mainpage');
+            navigate('/cuc/dashboard');
           }
         } else {
           throw new Error('Invalid credentials');
