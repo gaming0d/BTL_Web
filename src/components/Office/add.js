@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 import { format } from 'date-fns';
-
+import './carForm.css'; // Import the custom CSS file for carForm
 
 const CarForm = () => {
   const [carDetails, setCarDetails] = useState({
@@ -49,7 +49,9 @@ const CarForm = () => {
         const ownerResponse = await axios.get(`http://localhost:8000/car_owners/?owner_code=${carDetails.owner_code}`);
         const existingOwner = ownerResponse.data;
         console.log(existingOwner);
-        if (existingOwner) {
+        if (existingOwner.length > 0) {
+            console.log(existingOwner)
+            console.log("ton tai cai nay ne")
       // If the owner exists, create the new car and assign the existing owner
       const carResponse = await axios.post('http://localhost:8000/cars/', {
         registration_number: carDetails.registration_number,
@@ -72,7 +74,7 @@ const CarForm = () => {
         suspension: carDetails.suspension,
         braking_system: carDetails.braking_system,
         purpose: carDetails.purpose,
-        owner: existingOwner.owner_code, // Assign the existing owner to the new car
+        owner: carDetails.owner_code, // Assign the newly created owner to the new car
       });
 
       console.log('Car created:', carResponse.data);
@@ -130,7 +132,7 @@ const CarForm = () => {
         inspection_date: format(new Date(carDetails.inspection_date), 'yyyy-MM-dd'),
         expiration_date: format(new Date(carDetails.expiration_date), 'yyyy-MM-dd'),
         inspection_center: carDetails.inspection_center,
-        car: carResponse.data.id, // Use the car ID returned from car creation
+        car: carResponse.data.registration_number, // Use the car ID returned from car creation
         owner: ownerResponse.data.owner_code, // Use the owner code returned from car owner creation
       });
       console.log('Car inspection created:', inspectionResponse.data);
@@ -172,9 +174,9 @@ const CarForm = () => {
       <div className="container">
         <div className="panel panel-primary">
           <div className="panel-heading">
-            <h6 className="panel-title">Cars</h6>
+            <h6 className="panel-title">Car Form</h6>
           </div>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="car-form">
             {/* Car Details */}
             <label>
               Registration Number:
