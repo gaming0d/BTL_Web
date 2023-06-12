@@ -24,7 +24,7 @@ const Account = () => {
       if (response.ok) {
         setMessage('Account created successfully!');
         // Handle any further actions after successful account creation
-      } else if (data.username) {
+      } else if (response.status === 409) {
         setMessage('Username is already taken.');
         // Handle username taken scenario
       } else {
