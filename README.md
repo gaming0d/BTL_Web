@@ -70,14 +70,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
 ### beside package we have installed
-Bootstrap
+Bootstrap: 'npm install bootstrap'
 
-'npm install bootstrap'
+Helmet: 'npm install helmet' 
 
-Helmet
-
-'npm install helmet' 
-
-Recharts
-
-'npm install recharts'
+Recharts: 'npm install recharts'
