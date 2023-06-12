@@ -111,7 +111,7 @@ const Car = ({ customers }) => {
     const filteredCars = cars.filter((car) =>
       searchAttributes.every(
         (attribute) =>
-          car[attribute.attribute].toLowerCase().includes(attribute.value.toLowerCase())
+          car[attribute.attribute]?.toLowerCase().includes(attribute.value?.toLowerCase())
       )
     );
     setSearchTerms(filteredCars);
