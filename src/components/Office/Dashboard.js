@@ -13,7 +13,7 @@ import {
 } from "recharts";
 
 const Dashboard = () => {
-  const [data, setData] = useState([
+  const [data] = useState([
     { name: "2023-01", carquantity: 60 },
     { name: "2023-02", carquantity: 70 },
     { name: "2023-03", carquantity: 55 },
@@ -37,9 +37,9 @@ const Dashboard = () => {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
+            <YAxis/>
+            <Tooltip/>
+            <Legend/>
             <Line
               type="monotone"
               dataKey="carquantity"
