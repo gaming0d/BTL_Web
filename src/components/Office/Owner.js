@@ -1,74 +1,141 @@
-
-import BaseLayout from './Base';
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';
+import BaseLayout from './Base';
 
-const Owner = ({ customers }) => {
-    const [cars, setCars] = useState([]);
-
+const Owner = () => {
+    const [carOwners, setCarOwners] = useState([]);
+    const [editedCarOwner, setEditedCarOwner] = useState(null);
+    const [searchTerms, setSearchTerms] = useState([]);
+    const [searchAttributes, setSearchAttributes] = useState([
+      {
+        attribute: 'owner_code',
+        value: ''
+      }
+    ]);
+  
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/car_owners/')
+      fetch('http://localhost:8000/car_owners/')
         .then((response) => response.json())
-        .then((data) => setCars(data))
+        .then((data) => setCarOwners(data))
         .catch((error) => console.log(error));
     }, []);
-
-  return (
-    <BaseLayout>
-      <div className="container">
-        <div className="panel panel-primary">
-          <div className="panel-heading">
-            <h6 className="panel-title">Cars</h6>
+  
+    const handleEdit = (carOwner) => {
+      setEditedCarOwner(carOwner);  
+    };
+  
+    const handleInputChange = (e, index) => {
+        const { name, value } = e.target;
+        setCarOwners((prevCars) => {
+          const updatedCars = prevCars.map((car, carIndex) => {
+            if (carIndex === index) {
+              return { ...car, [name]: value };
+            }
+            return car;
+          });
+          return updatedCars;
+        });
+      };
+    
+      const handleSave = async (owner_code) => {
+        const carToUpdate = carOwners.find((car) => car.owner_code === owner_code);
+    
+        if (!carToUpdate) {
+          console.error(`Car with registration number ${owner_code} not found.`);
+          return;
+        }
+    
+        const updatedCar = { ...carToUpdate, ...editedCarOwner};
+    
+        try {
+          await axios.put(`http://localhost:8000/car_owners/${owner_code}/`, updatedCar);
+          setCarOwners((prevCars) => prevCars.map((car) => (car.owner_code === owner_code ? updatedCar : car)));
+          setEditedCarOwner(null);
+          // Refresh the car list or show a success message
+        } catch (error) {
+          console.error(error);
+          // Handle the error
+        }
+      };
+  
+    const handleDelete = async (owner_code) => {
+      try {
+        await axios.delete(`http://localhost:8000/car_owners/${owner_code}/`);
+        // Refresh the car owner list or show a success message
+        setCarOwners((prevCarOwners) =>
+          prevCarOwners.filter((carOwner) => carOwner.owner_code!== owner_code)
+        );
+      } catch (error) {
+        console.error(error);
+        // Handle the error
+      }
+    };
+  
+    return (
+        <BaseLayout>
+          <div className="container">
+            <div className="panel panel-primary">
+              <div className="panel-heading">
+                <h6 className="panel-title">Car Owners</h6>
+              </div>
+              <table className="table table-hover">
+              
+<thead>
+  <tr>
+    <th>Owner Code</th>
+    <th>Owner Type</th>
+    <th>Agency Name</th>
+    <th>Agency Address</th>
+    <th>Agency Contact</th>
+    <th>Representative Name</th>
+    <th>Individual Name</th>
+    <th>Address</th>
+    <th>Phone</th>
+    <th>Emergency Contact</th>
+    <th>License Number</th>
+    <th>Traffic Violations</th>
+    <th>Actions</th>
+  </tr>
+</thead>
+                <tbody>
+                {carOwners.map((carOwner, index) => (
+  <tr key={carOwner.owner_code}>
+    {Object.entries(carOwner).map(([key, value]) => (
+      <td key={key}>
+        {editedCarOwner === index ? (
+          <input
+            type="text"
+            name={key}
+            value={value}
+            onChange={(e) => handleInputChange(e, index)}
+          />
+        ) : (
+          <span>{value}</span>
+        )}
+      </td>
+    ))}
+    <td>
+      {editedCarOwner === index ? (
+        <button className="btn btn-primary" onClick={() => handleSave(carOwner.owner_code)}>
+          Save
+        </button>
+      ) : (
+        <button className="btn btn-primary" onClick={() => handleEdit(index)}>
+          Edit
+        </button>
+      )}
+      <button className="btn btn-danger" onClick={() => handleDelete(carOwner.owner_code)}>
+        Delete
+      </button>
+    </td>
+  </tr>
+))}
+</tbody>
+              </table>
+            </div>
           </div>
-          <table className="table table-hover" id="dev-table">
-            <thead>
-              <tr>
-                <th>Owner Type</th>
-                <th>Agency Name</th>
-                <th>Agency Address</th>
-                <th>Agency Contact</th>
-                <th>Representative Name</th>
-                <th>Individual Name</th>
-                <th>Address</th>
-                <th>Phone</th>
-                <th>Emergency Contact</th>
-                <th>License Number</th>
-                <th>Owner Code</th>
-                <th>Traffic Violations</th>
-              </tr>
-            </thead>
-            <tbody>
-            {cars.map((car) => (
-              <tr key={car.registration_number}>
-                
-                <td>{car.owner && car.owner.owner_type}</td>
-                <td>{car.owner && car.owner.owner_type === 'agency' ? car.owner.agency_name : ''}</td>
-                <td>{car.owner && car.owner.owner_type === 'agency' ? car.owner.agency_name : 'null'}</td>
-                <td>{car.owner && car.owner.owner_type === 'agency' ? car.owner.agency_address : 'null'}</td>
-                <td>{car.owner && car.owner.owner_type === 'agency' ? car.owner.agency_contact : 'null'}</td>
-                <td>{car.owner && car.owner.owner_type === 'agency' ? car.owner.representative_name : 'null'}</td>
-                <td>{car.owner && car.owner.owner_type === 'individual' ? car.owner.individual_name : 'null'}</td>
-                <td>{car.owner && car.owner.owner_type === 'individual' ? car.owner.address : 'null'}</td>
-                <td>{car.owner && car.owner.owner_type === 'individual' ? car.owner.phone : 'null'}</td>
-                <td>{car.owner && car.owner.owner_type === 'individual' ? car.owner.emergency_contact : 'null'}</td>
-                <td>{car.owner && car.owner.owner_type === 'individual' ? car.owner.license_number : 'null'}</td>
-                <td>{car.owner ? car.owner.owner_code : 'null'}</td>
-                <td>{car.owner ? car.owner.traffic_violations : 'null'}</td>
-                <td>{car.owner.representative_name}</td>
-                <td>{car.owner.address}</td>
-                <td>{car.owner.phone}</td>
-                <td>{car.owner.emergency_contact}</td>
-                <td>{car.owner.license_number}</td>
-                <td>{car.owner.owner_code}</td>
-                <td>{car.owner.traffic_violations}</td>
-              </tr>
-            ))}
-          </tbody>
-          </table>
-        </div>
-      </div>
-    </BaseLayout>
-  );
+        </BaseLayout>
+      );
 };
 
 export default Owner;
