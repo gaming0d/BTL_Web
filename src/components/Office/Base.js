@@ -20,7 +20,7 @@ const BaseLayout = ({ customer, request, children }) => {
           <h3>Car Management </h3>
         </div>
         <div className="right_area">
-          <a href="/logout" className="logout_btn">Logout</a>
+          <a href="/" className="logout_btn">Logout</a>
         </div>
       </header>
 
