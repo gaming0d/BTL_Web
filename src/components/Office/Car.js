@@ -21,8 +21,12 @@ const Car = ({ customers }) => {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCars((prevCars) => {
-      const updatedCars = [...prevCars];
-      updatedCars[index] = { ...updatedCars[index], [name]: value };
+      const updatedCars = prevCars.map((car, carIndex) => {
+        if (carIndex === index) {
+          return { ...car, [name]: value };
+        }
+        return car;
+      });
       return updatedCars;
     });
   };
@@ -39,9 +43,7 @@ const Car = ({ customers }) => {
 
     try {
       await axios.put(`http://localhost:8000/cars/${registrationNumber}/`, updatedCar);
-      setCars((prevCars) =>
-        prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car))
-      );
+      setCars((prevCars) => prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car)));
       setEditedCar(null);
       // Refresh the car list or show a success message
     } catch (error) {
