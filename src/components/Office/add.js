@@ -136,7 +136,7 @@ const CarForm = () => {
         expiration_date: format(new Date(carDetails.expiration_date), 'yyyy-MM-dd'),
         inspection_center: carDetails.inspection_center,
         car: carResponse.data.registration_number, // Use the car ID returned from car creation
-        owner: carDetails.owner_code, // Use the owner code returned from car owner creation
+        owner: ownerResponse.data.owner_code, // Use the owner code returned from car owner creation
       });
       console.log('Car inspection created:', inspectionResponse.data);
       setSuccessMessage('Car and inspection created successfully');
