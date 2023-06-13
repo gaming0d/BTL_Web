@@ -51,16 +51,11 @@ const CarForm = () => {
     try {
       // Create car details
       const ownerResponse = await axios.get(`http://localhost:8000/car_owners/?owner_code=${carDetails.owner_code}`);
-      const carResponses = await axios.get(`http://localhost:8000/cars/${carDetails.owner_code}`);
       const existingOwner = ownerResponse.data;
-      console.log(existingOwner);
-      if(setCarDetails.trim() !== '')
+      const isEmpty = Object.values(carDetails).some((value) => value.trim() === '');
+      if(isEmpty)
       {
         setMessage('Please fill all the field');
-      }
-      else if (carResponses.length > 0)
-      {
-        setMessage('Car id already exist.');
       }
       else if (existingOwner.length > 0) {
         console.log(existingOwner)
@@ -92,6 +87,8 @@ const CarForm = () => {
 
         console.log('Car created:', carResponse.data);
       } else {
+
+        
         console.log("Owner not exist")
         // If the owner does not exist, create a new owner and associate the new car with the owner
         const newOwnerResponse = await axios.post('http://localhost:8000/car_owners/', {
