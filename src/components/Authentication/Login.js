@@ -46,6 +46,7 @@ const Login = () => {
             navigate('/cuc/dashboard');
           }
         } else {
+          setErrorMessage('Wrong password or username pls check again')
           throw new Error('Invalid credentials');
         }
       })
@@ -59,8 +60,16 @@ const Login = () => {
       });
   };
 
+  const containerStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+  };
+
   return (
-    <div className="container">
+    
+    <div className="container" style={containerStyle}>
       <div className="login-container">
         <div className="login-header">
           <h2>Quản lý đăng kiểm</h2>
@@ -103,7 +112,7 @@ const Login = () => {
             <button type="submit">Đăng nhập</button>
           </div>
         </form>
-        
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
       </div>
     </div>
   );
