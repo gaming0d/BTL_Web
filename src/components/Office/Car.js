@@ -8,6 +8,7 @@ const Car = ({ customers }) => {
   // ...
 
   const handleEdit = (index) => {
+    console.log(index)
     setEditedCarIndex(index);
   };
   const [editedCar, setEditedCar] = useState(null);
@@ -32,7 +33,7 @@ const Car = ({ customers }) => {
 
   const handleSave = async (registrationNumber) => {
     const carToUpdate = cars.find((car) => car.registration_number === registrationNumber);
-
+    handleEdit(-1);
     if (!carToUpdate) {
       console.error(`Car with registration number ${registrationNumber} not found.`);
       return;
@@ -42,10 +43,12 @@ const Car = ({ customers }) => {
 
     try {
       await axios.put(`http://localhost:8000/cars/${registrationNumber}/`, updatedCar);
+ 
       setCars((prevCars) =>
         prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car))
       );
-        setEditedCar(null);
+     
+
       // Refresh the car list or show a success message
     } catch (error) {
       console.error(error);
