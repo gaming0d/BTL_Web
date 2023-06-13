@@ -5,13 +5,7 @@ import BaseLayout from './Base';
 const InspectionCenter = () => {
   const [carOwners, setCarOwners] = useState([]);
   const [editedCarOwner, setEditedCarOwner] = useState(null);
-  const [searchTerms, setSearchTerms] = useState([]);
-  const [searchAttributes, setSearchAttributes] = useState([
-    {
-      attribute: 'inspection_number',
-      value: ''
-    }
-  ]);
+  const [searchTerms, setSearchTerms] = useState({});
 
   useEffect(() => {
     fetch('http://localhost:8000/car_inspections/')
@@ -75,6 +69,16 @@ const InspectionCenter = () => {
     const value = e.target.value;
     setSearchTerms((prevSearchTerms) => ({ ...prevSearchTerms, [attribute]: value }));
   };
+
+  const filteredCars = carOwners.filter((car) => {
+    for (const attribute in searchTerms) {
+      const searchTerm = searchTerms[attribute];
+      if (searchTerm && !car[attribute].toLowerCase().includes(searchTerm.toLowerCase())) {
+        return false;
+      }
+    }
+    return true;
+  });
 
   return (
     <BaseLayout>
@@ -141,16 +145,39 @@ const InspectionCenter = () => {
               </tr>
             </thead>
             <tbody>
-              {searchTerms.map((car, index) => (
-                <tr key={car.inspection_number}>
-                  <td>{car.inspection_number}</td>
-                  <td>{car.inspection_date}</td>
-                  <td>{car.expiration_date}</td>
-                  <td>{car.inspection_center}</td>
-                  <td>{car.car}</td>
-                  <td>{car.owner}</td>
+              {filteredCars.map((car, index) => (
+                <tr key={car.registration_number}>
+                  {Object.entries(car).map(([key, value]) => (
+                    <td key={key}>
+                      {editedCarOwner === car ? (
+                        <input
+                          type="text"
+                          name={key}
+                          value={value}
+                          onChange={(e) => handleInputChange(e, index)}
+                        />
+                      ) : (
+                        value
+                      )}
+                    </td>
+                  ))}
+                  <td>
+                    {editedCarOwner === car ? (
+                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                        Save
+                      </button>
+                    ) : (
+                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
+                        Edit
+                      </button>
+                    )}
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
+
               {carOwners.map((carOwner, index) => (
                 <tr key={carOwner.inspection_number}>
                   {Object.entries(carOwner).map(([key, value]) => (

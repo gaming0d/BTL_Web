@@ -2,16 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 
-const OwnerCenter = () => {
+const Owner = () => {
   const [carOwners, setCarOwners] = useState([]);
   const [editedCarOwner, setEditedCarOwner] = useState(null);
-  const [searchTerms, setSearchTerms] = useState([]);
-  const [searchAttributes, setSearchAttributes] = useState([
-    {
-      attribute: 'owner_code',
-      value: ''
-    }
-  ]);
+  const [searchTerms, setSearchTerms] = useState({});
 
   useEffect(() => {
     fetch('http://localhost:8000/car_owners/')
@@ -75,6 +69,16 @@ const OwnerCenter = () => {
     const value = e.target.value;
     setSearchTerms((prevSearchTerms) => ({ ...prevSearchTerms, [attribute]: value }));
   };
+
+  const filteredCars = carOwners.filter((car) => {
+    for (const attribute in searchTerms) {
+      const searchTerm = searchTerms[attribute];
+      if (searchTerm && !car[attribute].toLowerCase().includes(searchTerm.toLowerCase())) {
+        return false;
+      }
+    }
+    return true;
+  });
 
   return (
     <BaseLayout>
@@ -190,20 +194,36 @@ const OwnerCenter = () => {
               </tr>
             </thead>
             <tbody>
-              {searchTerms.map((car, index) => (
-                <tr key={car.owner_code}>
-                  <td>{car.owner_code}</td>
-                  <td>{car.owner_type}</td>
-                  <td>{car.agency_name}</td>
-                  <td>{car.agency_address}</td>
-                  <td>{car.agency_contact}</td>
-                  <td>{car.representative_name}</td>
-                  <td>{car.individual_name}</td>
-                  <td>{car.address}</td>
-                  <td>{car.phone}</td>
-                  <td>{car.emergency_contact}</td>
-                  <td>{car.license_number}</td>
-                  <td>{car.traffic_violations}</td>
+              {filteredCars.map((car, index) => (
+                <tr key={car.registration_number}>
+                  {Object.entries(car).map(([key, value]) => (
+                    <td key={key}>
+                      {editedCarOwner === car ? (
+                        <input
+                          type="text"
+                          name={key}
+                          value={value}
+                          onChange={(e) => handleInputChange(e, index)}
+                        />
+                      ) : (
+                        value
+                      )}
+                    </td>
+                  ))}
+                  <td>
+                    {editedCarOwner === car ? (
+                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                        Save
+                      </button>
+                    ) : (
+                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
+                        Edit
+                      </button>
+                    )}
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))}
               {carOwners.map((carOwner, index) => (
@@ -246,4 +266,4 @@ const OwnerCenter = () => {
   );
 };
 
-export default OwnerCenter;
+export default Owner;
