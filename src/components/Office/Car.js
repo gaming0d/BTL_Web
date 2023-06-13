@@ -6,13 +6,6 @@ const Car = ({ customers }) => {
   const [cars, setCars] = useState([]);
   const [editedCar, setEditedCar] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
-  const searchTermsArray = Object.values(searchTerms);
-  const [searchAttributes, setSearchAttributes] = useState([
-    {
-      attribute: 'registration_number',
-      value: ''
-    }
-  ]);
 
   useEffect(() => {
     fetch('http://localhost:8000/cars/')
@@ -34,17 +27,9 @@ const Car = ({ customers }) => {
     });
   };
 
-  const handleInputChangeEdit = (e, index) => {
+  const handleInputChangeEdit = (e) => {
     const { name, value } = e.target;
-    setCars((prevCars) => {
-      const updatedCars = prevCars.map((car, carIndex) => {
-        if (carIndex === index) {
-          return { ...car, [name]: value };
-        }
-        return car;
-      });
-      return updatedCars;
-    });
+    setEditedCar((prevCar) => ({ ...prevCar, [name]: value }));
   };
 
   const handleSave = async (registrationNumber) => {
@@ -285,12 +270,12 @@ const Car = ({ customers }) => {
                 <tr key={car.registration_number}>
                   {Object.entries(car).map(([key, value]) => (
                     <td key={key}>
-                      {editedCar === car ? (
+                      {editedCar && editedCar.registration_number === car.registration_number ? (
                         <input
                           type="text"
                           name={key}
-                          value={value}
-                          onChange={(e) => handleInputChangeSearch(e, index)}
+                          value={editedCar[key]}
+                          onChange={handleInputChangeEdit}
                         />
                       ) : (
                         value
