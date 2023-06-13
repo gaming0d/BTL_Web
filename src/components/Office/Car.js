@@ -25,11 +25,24 @@ const Car = ({ customers }) => {
     setEditedCar(car);
   };
 
-  const handleInputChange = (e, index) => {
+  const handleInputChangeSearch = (e, index) => {
     const { name, value } = e.target;
     setCars((prevCars) => {
       const updatedCars = [...prevCars];
       updatedCars[index] = { ...updatedCars[index], [name]: value };
+      return updatedCars;
+    });
+  };
+
+  const handleInputChangeEdit = (e, index) => {
+    const { name, value } = e.target;
+    setCars((prevCars) => {
+      const updatedCars = prevCars.map((car, carIndex) => {
+        if (carIndex === index) {
+          return { ...car, [name]: value };
+        }
+        return car;
+      });
       return updatedCars;
     });
   };
@@ -277,7 +290,7 @@ const Car = ({ customers }) => {
                           type="text"
                           name={key}
                           value={value}
-                          onChange={(e) => handleInputChange(e, index)}
+                          onChange={(e) => handleInputChangeSearch(e, index)}
                         />
                       ) : (
                         value
@@ -309,7 +322,7 @@ const Car = ({ customers }) => {
                           type="text"
                           name={key}
                           value={value}
-                          onChange={(e) => handleInputChange(e, index)}
+                          onChange={(e) => handleInputChangeEdit(e, index)}
                         />
                       ) : (
                         <span>{value}</span>
