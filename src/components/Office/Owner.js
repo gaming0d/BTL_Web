@@ -21,12 +21,8 @@ const Owner = () => {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCarOwners((prevCars) => {
-      const updatedCars = prevCars.map((car, carIndex) => {
-        if (carIndex === index) {
-          return { ...car, [name]: value };
-        }
-        return car;
-      });
+      const updatedCars = [...prevCars];
+      updatedCars[index] = { ...updatedCars[index], [name]: value };
       return updatedCars;
     });
   };
@@ -35,14 +31,14 @@ const Owner = () => {
     const carToUpdate = carOwners.find((car) => car.owner_code === owner_code);
 
     if (!carToUpdate) {
-      console.error(`Car with registration number ${owner_code} not found.`);
+      console.error("C with registration number ${owner_code} not found.");
       return;
     }
 
     const updatedCar = { ...carToUpdate, ...editedCarOwner };
 
     try {
-      await axios.put(`http://localhost:8000/car_owners/${owner_code}/`, updatedCar);
+      await axios.put('http://localhost:8000/car_owners/${owner_code}/, updatedCar');
       setCarOwners((prevCars) => prevCars.map((car) => (car.owner_code === owner_code ? updatedCar : car)));
       setEditedCarOwner(null);
       // Refresh the car list or show a success message
@@ -54,11 +50,8 @@ const Owner = () => {
 
   const handleDelete = async (owner_code) => {
     try {
-      await axios.delete(`http://localhost:8000/car_owners/${owner_code}/`);
+      await axios.delete('http://localhost:8000/car_owners/${owner_code}/');
       // Refresh the car owner list or show a success message
-      setCarOwners((prevCarOwners) =>
-        prevCarOwners.filter((carOwner) => carOwner.owner_code !== owner_code)
-      );
     } catch (error) {
       console.error(error);
       // Handle the error
@@ -221,38 +214,6 @@ const Owner = () => {
                       </button>
                     )}
                     <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {carOwners.map((carOwner, index) => (
-                <tr key={carOwner.owner_code}>
-                  {Object.entries(carOwner).map(([key, value]) => (
-                    <td key={key}>
-                      {editedCarOwner === index ? (
-                        <input
-                          type="text"
-                          name={key}
-                          value={value}
-                          onChange={(e) => handleInputChange(e, index)}
-                        />
-                      ) : (
-                        <span>{value}</span>
-                      )}
-                    </td>
-                  ))}
-                  <td>
-                    {editedCarOwner === index ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(carOwner.owner_code)}>
-                        Save
-                      </button>
-                    ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(index)}>
-                        Edit
-                      </button>
-                    )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(carOwner.owner_code)}>
                       Delete
                     </button>
                   </td>
