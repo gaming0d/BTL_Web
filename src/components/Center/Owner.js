@@ -190,6 +190,22 @@ const OwnerCenter = () => {
               </tr>
             </thead>
             <tbody>
+              {searchTerms.map((car, index) => (
+                <tr key={car.owner_code}>
+                  <td>{car.owner_code}</td>
+                  <td>{car.owner_type}</td>
+                  <td>{car.agency_name}</td>
+                  <td>{car.agency_address}</td>
+                  <td>{car.agency_contact}</td>
+                  <td>{car.representative_name}</td>
+                  <td>{car.individual_name}</td>
+                  <td>{car.address}</td>
+                  <td>{car.phone}</td>
+                  <td>{car.emergency_contact}</td>
+                  <td>{car.license_number}</td>
+                  <td>{car.traffic_violations}</td>
+                </tr>
+              ))}
               {carOwners.map((carOwner, index) => (
                 <tr key={carOwner.owner_code}>
                   {Object.entries(carOwner).map(([key, value]) => (
