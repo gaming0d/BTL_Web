@@ -25,7 +25,7 @@ const CarForm = () => {
     registered_location: '',
     manufacturer: '',
     model: '',
-    version: '',  
+    version: '',
     engine_capacity: '',
     power: '',
     torque: '',
@@ -41,64 +41,67 @@ const CarForm = () => {
     purpose: 'personal',
   });
 
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
       // Create car details
-        const ownerResponse = await axios.get(`http://localhost:8000/car_owners/?owner_code=${carDetails.owner_code}`);
-        const existingOwner = ownerResponse.data;
-        console.log(existingOwner);
-        if (existingOwner.length > 0) {
-            console.log(existingOwner)
-            console.log("ton tai cai nay ne")
-      // If the owner exists, create the new car and assign the existing owner
-      const carResponse = await axios.post('http://localhost:8000/cars/', {
-        registration_number: carDetails.registration_number,
-        registration_date: format(new Date(carDetails.registration_date), 'yyyy-MM-dd'),
-        license_plate: carDetails.license_plate,
-        registered_location: carDetails.registered_location,
-        manufacturer: carDetails.manufacturer,
-        model: carDetails.model,
-        version: carDetails.version,
-        engine_capacity: carDetails.engine_capacity,
-        power: carDetails.power,
-        torque: carDetails.torque,
-        transmission: carDetails.transmission,
-        seating_capacity: carDetails.seating_capacity,
-        length: carDetails.length,
-        width: carDetails.width,
-        height: carDetails.height,
-        weight: carDetails.weight,
-        fuel_consumption: carDetails.fuel_consumption,
-        suspension: carDetails.suspension,
-        braking_system: carDetails.braking_system,
-        purpose: carDetails.purpose,
-        owner: carDetails.owner_code, // Assign the newly created owner to the new car
-      });
+      const ownerResponse = await axios.get(`http://localhost:8000/car_owners/?owner_code=${carDetails.owner_code}`);
+      const existingOwner = ownerResponse.data;
+      console.log(existingOwner);
+      if (existingOwner.length > 0) {
+        console.log(existingOwner)
+        console.log("ton tai cai nay ne")
+        // If the owner exists, create the new car and assign the existing owner
+        const carResponse = await axios.post('http://localhost:8000/cars/', {
+          registration_number: carDetails.registration_number,
+          registration_date: format(new Date(carDetails.registration_date), 'yyyy-MM-dd'),
+          license_plate: carDetails.license_plate,
+          registered_location: carDetails.registered_location,
+          manufacturer: carDetails.manufacturer,
+          model: carDetails.model,
+          version: carDetails.version,
+          engine_capacity: carDetails.engine_capacity,
+          power: carDetails.power,
+          torque: carDetails.torque,
+          transmission: carDetails.transmission,
+          seating_capacity: carDetails.seating_capacity,
+          length: carDetails.length,
+          width: carDetails.width,
+          height: carDetails.height,
+          weight: carDetails.weight,
+          fuel_consumption: carDetails.fuel_consumption,
+          suspension: carDetails.suspension,
+          braking_system: carDetails.braking_system,
+          purpose: carDetails.purpose,
+          owner: carDetails.owner_code, // Assign the newly created owner to the new car
+        });
 
-      console.log('Car created:', carResponse.data);
-    } else {
+        console.log('Car created:', carResponse.data);
+      } else {
         console.log("Owner not exist")
-      // If the owner does not exist, create a new owner and associate the new car with the owner
-      const newOwnerResponse = await axios.post('http://localhost:8000/car_owners/', {
-        owner_code: carDetails.owner_code,
-        owner_type: carDetails.ownerType,
-        agency_name: carDetails.agency_name,
-        agency_address: carDetails.agency_address,
-        agency_contact: carDetails.agency_contact,
-        representative_name: carDetails.representative_name,
-        individual_name: carDetails.individual_name,
-        address: carDetails.address,
-        phone: carDetails.phone,
-        emergency_contact: carDetails.emergency_contact,
-        license_number: carDetails.license_number,
-        owner_code: carDetails.owner_code,
-        traffic_violations: carDetails.traffic_violations,
-      });
+        // If the owner does not exist, create a new owner and associate the new car with the owner
+        const newOwnerResponse = await axios.post('http://localhost:8000/car_owners/', {
+          owner_code: carDetails.owner_code,
+          owner_type: carDetails.ownerType,
+          agency_name: carDetails.agency_name,
+          agency_address: carDetails.agency_address,
+          agency_contact: carDetails.agency_contact,
+          representative_name: carDetails.representative_name,
+          individual_name: carDetails.individual_name,
+          address: carDetails.address,
+          phone: carDetails.phone,
+          emergency_contact: carDetails.emergency_contact,
+          license_number: carDetails.license_number,
+          owner_code: carDetails.owner_code,
+          traffic_violations: carDetails.traffic_violations,
+        });
 
-      console.log('Car owner created:', newOwnerResponse.data);
-    }
+        console.log('Car owner created:', newOwnerResponse.data);
+      }
       // Create the new car and assign the newly created owner
       const carResponse = await axios.post('http://localhost:8000/cars/', {
         registration_number: carDetails.registration_number,
@@ -125,9 +128,9 @@ const CarForm = () => {
       });
 
       console.log('Car created:', carResponse.data);
-    
 
-    const inspectionResponse = await axios.post('http://localhost:8000/car_inspections/', {
+
+      const inspectionResponse = await axios.post('http://localhost:8000/car_inspections/', {
         inspection_number: carDetails.inspection_number,
         inspection_date: format(new Date(carDetails.inspection_date), 'yyyy-MM-dd'),
         expiration_date: format(new Date(carDetails.expiration_date), 'yyyy-MM-dd'),
@@ -136,12 +139,14 @@ const CarForm = () => {
         owner: ownerResponse.data.owner_code, // Use the owner code returned from car owner creation
       });
       console.log('Car inspection created:', inspectionResponse.data);
+      setSuccessMessage('Car and inspection created successfully');
+      setErrorMessage('');
       // Create car owner
-      
+
 
 
       // Create car inspection
-      
+
 
       // Reset the form or show a success message
     } catch (error) {
@@ -157,6 +162,8 @@ const CarForm = () => {
         console.log('Power Error:', errors.power);
         console.log('Torque Error:', errors.torque);
         // ... and so on
+        setSuccessMessage('Car and inspection created successfully');
+        setErrorMessage('');
       }
     }
   };
@@ -188,14 +195,14 @@ const CarForm = () => {
               />
             </label>
             <label>
-                Registration Date:
-                <input
-                    type="date"
-                    name="registration_date"
-                    value={carDetails.registration_date}
-                    onChange={handleChange}
-                />
-                </label>
+              Registration Date:
+              <input
+                type="date"
+                name="registration_date"
+                value={carDetails.registration_date}
+                onChange={handleChange}
+              />
+            </label>
             <label>
               License Plate:
               <input
@@ -472,7 +479,7 @@ const CarForm = () => {
                 name="inspection_date"
                 value={carDetails.inspection_date}
                 onChange={handleChange}
-            />
+              />
             </label>
             <label>
               Expiration Date:
@@ -495,6 +502,8 @@ const CarForm = () => {
 
             <button type="submit">Submit</button>
           </form>
+          {successMessage && <div className="success-message">{successMessage}</div>}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
       </div>
     </BaseLayout>
