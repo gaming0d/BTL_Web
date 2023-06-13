@@ -25,12 +25,12 @@ const BaseLayout = ({ customer, request, children }) => {
       </header>
 
       <div className="sidebar">
-        <a href="/cuc/dashboard"><i className="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-        <a href="/cuc/listofcar"><i className="fab fa-product-hunt"></i><span>Car</span></a>
-        <a href="/cuc/listofinspection"><i className="fas fa-history"></i><span>Inspection</span></a>
-        <a href="/cuc/listofowner"><i className="fas fa-question-circle"></i><span>Owner</span></a>
-        <a href="/cuc/add"><i className="fas fa-sync-alt"></i><span>Add</span></a>
-        <a href="/cuc/account"><i className="fas fa-sync-alt"></i><span>Account</span></a>
+        <a href="/center/dashboard"><i className="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
+        <a href="/center/listofcar"><i className="fab fa-product-hunt"></i><span>Car</span></a>
+        <a href="/center/listofinspection"><i className="fas fa-history"></i><span>Inspection</span></a>
+        <a href="/center/listofowner"><i className="fas fa-question-circle"></i><span>Owner</span></a>
+        <a href="/center/add"><i className="fas fa-sync-alt"></i><span>Add</span></a>
+        <a href="/center/account"><i className="fas fa-sync-alt"></i><span>Account</span></a>
       </div>
 
       <div className="content" style={{ marginLeft: '360px', padding: '20px', paddingTop: '60px' }}>
