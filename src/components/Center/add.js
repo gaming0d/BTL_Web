@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import './carForm.css'; // Import the custom CSS file for carForm
 
 const CarFormCenter = () => {
+  const [message, setMessage] = useState('');
   const [carDetails, setCarDetails] = useState({
     ownerType: 'individual',
     agency_name: '',
@@ -48,10 +49,12 @@ const CarFormCenter = () => {
     e.preventDefault();
 
     try {
+      setErrorMessage('Invalid information please try again');
       // Create car details
       const ownerResponse = await axios.get(`http://localhost:8000/car_owners/?owner_code=${carDetails.owner_code}`);
       const existingOwner = ownerResponse.data;
-      console.log(existingOwner);
+      const isEmpty = Object.values(carDetails).some((value) => value.trim() === '');
+     
       if (existingOwner.length > 0) {
         console.log(existingOwner)
         console.log("ton tai cai nay ne")
@@ -82,6 +85,8 @@ const CarFormCenter = () => {
 
         console.log('Car created:', carResponse.data);
       } else {
+
+        
         console.log("Owner not exist")
         // If the owner does not exist, create a new owner and associate the new car with the owner
         const newOwnerResponse = await axios.post('http://localhost:8000/car_owners/', {
@@ -139,7 +144,7 @@ const CarFormCenter = () => {
         owner: ownerResponse.data.owner_code, // Use the owner code returned from car owner creation
       });
       console.log('Car inspection created:', inspectionResponse.data);
-      setSuccessMessage('Car and inspection created successfully');
+      setSuccessMessage('Car created successfully');
       setErrorMessage('');
       // Create car owner
 
@@ -152,6 +157,7 @@ const CarFormCenter = () => {
     } catch (error) {
       console.error(error);
       if (error.response) {
+        setErrorMessage('Invalid information please try again');
         console.log('Error response:', error.response.data);
         console.log('Error status:', error.response.status);
         console.log('Error headers:', error.response.headers);
@@ -162,8 +168,7 @@ const CarFormCenter = () => {
         console.log('Power Error:', errors.power);
         console.log('Torque Error:', errors.torque);
         // ... and so on
-        setSuccessMessage('Car and inspection created successfully');
-        setErrorMessage('');
+        //setErrorMessage('Please fill all the field to update');
       }
     }
   };
@@ -504,6 +509,7 @@ const CarFormCenter = () => {
           </form>
           {successMessage && <div className="success-message">{successMessage}</div>}
           {errorMessage && <div className="error-message">{errorMessage}</div>}
+          {message && <p>{message}</p>}
         </div>
       </div>
     </BaseLayout>
