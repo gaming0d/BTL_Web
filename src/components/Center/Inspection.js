@@ -141,6 +141,16 @@ const InspectionCenter = () => {
               </tr>
             </thead>
             <tbody>
+              {searchTerms.map((car, index) => (
+                <tr key={car.inspection_number}>
+                  <td>{car.inspection_number}</td>
+                  <td>{car.inspection_date}</td>
+                  <td>{car.expiration_date}</td>
+                  <td>{car.inspection_center}</td>
+                  <td>{car.car}</td>
+                  <td>{car.owner}</td>
+                </tr>
+              ))}
               {carOwners.map((carOwner, index) => (
                 <tr key={carOwner.inspection_number}>
                   {Object.entries(carOwner).map(([key, value]) => (
