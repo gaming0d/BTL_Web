@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 
-const Inspection = () => {
+const InspectionCenter = () => {
   const [carOwners, setCarOwners] = useState([]);
   const [editedCarOwner, setEditedCarOwner] = useState(null);
   const [searchTerms, setSearchTerms] = useState([]);
@@ -181,4 +181,4 @@ const Inspection = () => {
   );
 };
 
-export default Inspection;
+export default InspectionCenter;

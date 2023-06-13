@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 
-const Inspection = () => {
+const OwnerCenter = () => {
   const [carOwners, setCarOwners] = useState([]);
   const [editedCarOwner, setEditedCarOwner] = useState(null);
   const [searchTerms, setSearchTerms] = useState([]);
   const [searchAttributes, setSearchAttributes] = useState([
     {
-      attribute: 'inspection_number',
+      attribute: 'owner_code',
       value: ''
     }
   ]);
 
   useEffect(() => {
-    fetch('http://localhost:8000/car_inspections/')
+    fetch('http://localhost:8000/car_owners/')
       .then((response) => response.json())
       .then((data) => setCarOwners(data))
       .catch((error) => console.log(error));
@@ -37,19 +37,19 @@ const Inspection = () => {
     });
   };
 
-  const handleSave = async (inspection_number) => {
-    const carToUpdate = carOwners.find((car) => car.inspection_number === inspection_number);
+  const handleSave = async (owner_code) => {
+    const carToUpdate = carOwners.find((car) => car.owner_code === owner_code);
 
     if (!carToUpdate) {
-      console.error(`Car with registration number ${inspection_number} not found.`);
+      console.error(`Car with registration number ${owner_code} not found.`);
       return;
     }
 
     const updatedCar = { ...carToUpdate, ...editedCarOwner };
 
     try {
-      await axios.put(`http://localhost:8000/car_inspections/${inspection_number}/`, updatedCar);
-      setCarOwners((prevCars) => prevCars.map((car) => (car.inspection_number === inspection_number ? updatedCar : car)));
+      await axios.put(`http://localhost:8000/car_owners/${owner_code}/`, updatedCar);
+      setCarOwners((prevCars) => prevCars.map((car) => (car.owner_code === owner_code ? updatedCar : car)));
       setEditedCarOwner(null);
       // Refresh the car list or show a success message
     } catch (error) {
@@ -58,12 +58,12 @@ const Inspection = () => {
     }
   };
 
-  const handleDelete = async (inspection_number) => {
+  const handleDelete = async (owner_code) => {
     try {
-      await axios.delete(`http://localhost:8000/car_inspections/${inspection_number}/`);
+      await axios.delete(`http://localhost:8000/car_owners/${owner_code}/`);
       // Refresh the car owner list or show a success message
       setCarOwners((prevCarOwners) =>
-        prevCarOwners.filter((carOwner) => carOwner.inspection_number !== inspection_number)
+        prevCarOwners.filter((carOwner) => carOwner.owner_code !== owner_code)
       );
     } catch (error) {
       console.error(error);
@@ -87,12 +87,18 @@ const Inspection = () => {
 
             <thead>
               <tr>
-                <th>Inspection Number</th>
-                <th>Inspection Date</th>
-                <th>Expiration Date</th>
-                <th>Inspection Center</th>
-                <th>Car</th>
-                <th>Owner</th>
+                <th>Owner Code</th>
+                <th>Owner Type</th>
+                <th>Agency Name</th>
+                <th>Agency Address</th>
+                <th>Agency Contact</th>
+                <th>Representative Name</th>
+                <th>Individual Name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Emergency Contact</th>
+                <th>License Number</th>
+                <th>Traffic Violations</th>
                 <th>Actions</th>
               </tr>
               <tr>
@@ -100,49 +106,92 @@ const Inspection = () => {
                   <input
                     type="text"
                     className="form-control"
-                    onChange={(e) => handleSearchChange(e, 'inspection_number')}
+                    onChange={(e) => handleSearchChange(e, 'owner_code')}
                   />
                 </th>
                 <th>
                   <input
                     type="text"
                     className="form-control"
-                    onChange={(e) => handleSearchChange(e, 'inspection_date')}
+                    onChange={(e) => handleSearchChange(e, 'owner_type')}
                   />
                 </th>
                 <th>
                   <input
                     type="text"
                     className="form-control"
-                    onChange={(e) => handleSearchChange(e, 'expiration_date')}
+                    onChange={(e) => handleSearchChange(e, 'agency_name')}
+                  />
+                </th>
+
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => handleSearchChange(e, 'agency_address')}
                   />
                 </th>
                 <th>
                   <input
                     type="text"
                     className="form-control"
-                    onChange={(e) => handleSearchChange(e, 'inspection_center')}
+                    onChange={(e) => handleSearchChange(e, 'agency_contact')}
                   />
                 </th>
                 <th>
                   <input
                     type="text"
                     className="form-control"
-                    onChange={(e) => handleSearchChange(e, 'car')}
+                    onChange={(e) => handleSearchChange(e, 'representative_name')}
                   />
                 </th>
                 <th>
                   <input
                     type="text"
                     className="form-control"
-                    onChange={(e) => handleSearchChange(e, 'owner')}
+                    onChange={(e) => handleSearchChange(e, 'individual_name')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => handleSearchChange(e, 'address')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => handleSearchChange(e, 'phone')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => handleSearchChange(e, 'emergency_contact')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => handleSearchChange(e, 'license_number')}
+                  />
+                </th>
+                <th>
+                  <input
+                    type="text"
+                    className="form-control"
+                    onChange={(e) => handleSearchChange(e, 'traffic_violations')}
                   />
                 </th>
               </tr>
             </thead>
             <tbody>
               {carOwners.map((carOwner, index) => (
-                <tr key={carOwner.inspection_number}>
+                <tr key={carOwner.owner_code}>
                   {Object.entries(carOwner).map(([key, value]) => (
                     <td key={key}>
                       {editedCarOwner === index ? (
@@ -159,7 +208,7 @@ const Inspection = () => {
                   ))}
                   <td>
                     {editedCarOwner === index ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(carOwner.inspection_number)}>
+                      <button className="btn btn-primary" onClick={() => handleSave(carOwner.owner_code)}>
                         Save
                       </button>
                     ) : (
@@ -167,7 +216,7 @@ const Inspection = () => {
                         Edit
                       </button>
                     )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(carOwner.inspection_number)}>
+                    <button className="btn btn-danger" onClick={() => handleDelete(carOwner.owner_code)}>
                       Delete
                     </button>
                   </td>
@@ -181,4 +230,4 @@ const Inspection = () => {
   );
 };
 
-export default Inspection;
+export default OwnerCenter;

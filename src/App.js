@@ -15,6 +15,12 @@ import Inspection from "./components/Office/Inspection"
 import CarForm from './components/Office/add';
 import Account from './components/Office/Account';
 import Dashboard from './components/Office/Dashboard';
+
+import CarCenter from './components/Center/Car'
+import OwnerCenter from './components/Center/Owner'
+import InspectionCenter from "./components/Center/Inspection"
+import CarFormCenter from './components/Center/add';
+import DashboardCenter from './components/Center/Dashboard';
 const App = () => {
   return (
     <Router>
@@ -31,6 +37,19 @@ const App = () => {
         <Route path="/cuc/add" element = {<CarForm/>}/>
         <Route path="/cuc/account" element = {<Account/>}/>
         <Route path="/cuc/dashboard" element = {<Dashboard/>}/>
+      </Routes> 
+      <Routes>
+        <Route exact path="/" element={<Login />} />
+        <Route path="/vehicles" element={<VehicleList/>} />
+        <Route path="/upload-vehicle" element={<UploadVehicle />} />
+        <Route path="/monthly-report" element={<MonthlyReport />} />
+        <Route path="/expiring-vehicles" element={<ExpiringVehicles />} />
+        <Route path="/CarList" element={<CarList/>} />
+        <Route path="/center/listofcar" element={<CarCenter/>} />
+        <Route path="/center/listofowner" element={<OwnerCenter/>} />
+        <Route path="/center/listofinspection" element={<InspectionCenter/>}/>
+        <Route path="/center/add" element = {<CarFormCenter/>}/>
+        <Route path="/center/dashboard" element = {<DashboardCenter/>}/>
       </Routes> 
     </Router>
     // <a href="/cuc/dashboard"><i className="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
