@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import './carForm.css'; // Import the custom CSS file for carForm
 
 const CarForm = () => {
+  const [message, setMessage] = useState('');
   const [carDetails, setCarDetails] = useState({
     ownerType: 'individual',
     agency_name: '',
@@ -50,9 +51,14 @@ const CarForm = () => {
     try {
       // Create car details
       const ownerResponse = await axios.get(`http://localhost:8000/car_owners/?owner_code=${carDetails.owner_code}`);
+      const carResponses = await axios.get(`http://localhost:8000/cars/${carDetails.owner_code}`);
       const existingOwner = ownerResponse.data;
       console.log(existingOwner);
-      if (existingOwner.length > 0) {
+      if (carResponses || existingOwner.length > 0)
+      {
+        setMessage('Car id already exist.');
+      }
+      else if (existingOwner.length > 0) {
         console.log(existingOwner)
         console.log("ton tai cai nay ne")
         // If the owner exists, create the new car and assign the existing owner
@@ -162,8 +168,7 @@ const CarForm = () => {
         console.log('Power Error:', errors.power);
         console.log('Torque Error:', errors.torque);
         // ... and so on
-        setSuccessMessage('Car and inspection created successfully');
-        setErrorMessage('');
+        setErrorMessage('Please fill all the field to update');
       }
     }
   };
@@ -504,6 +509,7 @@ const CarForm = () => {
           </form>
           {successMessage && <div className="success-message">{successMessage}</div>}
           {errorMessage && <div className="error-message">{errorMessage}</div>}
+          {message && <p>{message}</p>}
         </div>
       </div>
     </BaseLayout>
