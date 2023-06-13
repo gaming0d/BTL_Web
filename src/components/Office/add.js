@@ -49,15 +49,13 @@ const CarForm = () => {
     e.preventDefault();
 
     try {
+      setErrorMessage('Invalid information please try again');
       // Create car details
       const ownerResponse = await axios.get(`http://localhost:8000/car_owners/?owner_code=${carDetails.owner_code}`);
       const existingOwner = ownerResponse.data;
       const isEmpty = Object.values(carDetails).some((value) => value.trim() === '');
-      if(isEmpty)
-      {
-        setMessage('Please fill all the field');
-      }
-      else if (existingOwner.length > 0) {
+     
+      if (existingOwner.length > 0) {
         console.log(existingOwner)
         console.log("ton tai cai nay ne")
         // If the owner exists, create the new car and assign the existing owner
@@ -146,7 +144,7 @@ const CarForm = () => {
         owner: ownerResponse.data.owner_code, // Use the owner code returned from car owner creation
       });
       console.log('Car inspection created:', inspectionResponse.data);
-      setSuccessMessage('Car and inspection created successfully');
+      setSuccessMessage('Car created successfully');
       setErrorMessage('');
       // Create car owner
 
@@ -159,6 +157,7 @@ const CarForm = () => {
     } catch (error) {
       console.error(error);
       if (error.response) {
+        setErrorMessage('Invalid information please try again');
         console.log('Error response:', error.response.data);
         console.log('Error status:', error.response.status);
         console.log('Error headers:', error.response.headers);
@@ -169,7 +168,7 @@ const CarForm = () => {
         console.log('Power Error:', errors.power);
         console.log('Torque Error:', errors.torque);
         // ... and so on
-        setErrorMessage('Please fill all the field to update');
+        //setErrorMessage('Please fill all the field to update');
       }
     }
   };
