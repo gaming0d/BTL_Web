@@ -6,6 +6,13 @@ const Car = ({ customers }) => {
   const [cars, setCars] = useState([]);
   const [editedCar, setEditedCar] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
+  const searchTermsArray = Object.values(searchTerms);
+  const [searchAttributes, setSearchAttributes] = useState([
+    {
+      attribute: 'registration_number',
+      value: ''
+    }
+  ]);
 
   useEffect(() => {
     fetch('http://localhost:8000/cars/')
@@ -21,8 +28,12 @@ const Car = ({ customers }) => {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCars((prevCars) => {
-      const updatedCars = [...prevCars];
-      updatedCars[index] = { ...updatedCars[index], [name]: value };
+      const updatedCars = prevCars.map((car, carIndex) => {
+        if (carIndex === index) {
+          return { ...car, [name]: value };
+        }
+        return car;
+      });
       return updatedCars;
     });
   };
@@ -54,6 +65,7 @@ const Car = ({ customers }) => {
     try {
       await axios.delete(`http://localhost:8000/cars/${registrationNumber}`);
       // Refresh the car list or show a success message
+      setCars((prevCars) => prevCars.filter((car) => car.registration_number !== registrationNumber));
     } catch (error) {
       console.error(error);
       // Handle the error
