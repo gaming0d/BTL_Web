@@ -4,6 +4,12 @@ import BaseLayout from './Base';
 
 const InspectionCenter = () => {
   const [carOwners, setCarOwners] = useState([]);
+  const [editedCarIndex, setEditedCarIndex] = useState(null);
+
+  const handleEdit = (index) => {
+    console.log(index)
+    setEditedCarIndex(index);
+  };
   const [editedCarOwner, setEditedCarOwner] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
 
@@ -13,10 +19,6 @@ const InspectionCenter = () => {
       .then((data) => setCarOwners(data))
       .catch((error) => console.log(error));
   }, []);
-
-  const handleEdit = (carOwner) => {
-    setEditedCarOwner(carOwner);
-  };
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -29,7 +31,7 @@ const InspectionCenter = () => {
 
   const handleSave = async (inspection_number) => {
     const carToUpdate = carOwners.find((car) => car.inspection_number === inspection_number);
-
+    handleEdit(-1);
     if (!carToUpdate) {
       console.error(`Car with registration number ${inspection_number} not found.`);
       return;
@@ -40,7 +42,6 @@ const InspectionCenter = () => {
     try {
       await axios.put(`http://localhost:8000/car_inspections/${inspection_number}/`, updatedCar);
       setCarOwners((prevCars) => prevCars.map((car) => (car.inspection_number === inspection_number ? updatedCar : car)));
-      setEditedCarOwner(null);
       // Refresh the car list or show a success message
     } catch (error) {
       console.error(error);
@@ -80,7 +81,7 @@ const InspectionCenter = () => {
           <div className="panel-heading">
             <h6 className="panel-title">Car Owners</h6>
           </div>
-          <table className="table table-hover">
+          <table className="table table-hover" id="dev-table">
 
             <thead>
               <tr>

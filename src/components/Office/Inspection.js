@@ -4,6 +4,12 @@ import BaseLayout from './Base';
 
 const Inspection = () => {
   const [carOwners, setCarOwners] = useState([]);
+  const [editedCarIndex, setEditedCarIndex] = useState(null);
+
+  const handleEdit = (index) => {
+    console.log(index)
+    setEditedCarIndex(index);
+  };
   const [editedCarOwner, setEditedCarOwner] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
 
@@ -14,26 +20,18 @@ const Inspection = () => {
       .catch((error) => console.log(error));
   }, []);
 
-  const handleEdit = (carOwner) => {
-    setEditedCarOwner(carOwner);
-  };
-
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCarOwners((prevCars) => {
-      const updatedCars = prevCars.map((car, carIndex) => {
-        if (carIndex === index) {
-          return { ...car, [name]: value };
-        }
-        return car;
-      });
+      const updatedCars = [...prevCars];
+      updatedCars[index] = { ...updatedCars[index], [name]: value };
       return updatedCars;
     });
   };
 
   const handleSave = async (inspection_number) => {
     const carToUpdate = carOwners.find((car) => car.inspection_number === inspection_number);
-
+    handleEdit(-1);
     if (!carToUpdate) {
       console.error(`Car with registration number ${inspection_number} not found.`);
       return;
@@ -44,7 +42,6 @@ const Inspection = () => {
     try {
       await axios.put(`http://localhost:8000/car_inspections/${inspection_number}/`, updatedCar);
       setCarOwners((prevCars) => prevCars.map((car) => (car.inspection_number === inspection_number ? updatedCar : car)));
-      setEditedCarOwner(null);
       // Refresh the car list or show a success message
     } catch (error) {
       console.error(error);
@@ -56,9 +53,6 @@ const Inspection = () => {
     try {
       await axios.delete(`http://localhost:8000/car_inspections/${inspection_number}/`);
       // Refresh the car owner list or show a success message
-      setCarOwners((prevCarOwners) =>
-        prevCarOwners.filter((carOwner) => carOwner.inspection_number !== inspection_number)
-      );
     } catch (error) {
       console.error(error);
       // Handle the error
@@ -87,7 +81,7 @@ const Inspection = () => {
           <div className="panel-heading">
             <h6 className="panel-title">Car Owners</h6>
           </div>
-          <table className="table table-hover">
+          <table className="table table-hover" id="dev-table">
 
             <thead>
               <tr>
@@ -146,7 +140,7 @@ const Inspection = () => {
             </thead>
             <tbody>
               {filteredCars.map((car, index) => (
-                <tr key={car.registration_number}>
+                <tr key={car.inspection_number}>
                   {Object.entries(car).map(([key, value]) => (
                     <td key={key}>
                       {editedCarOwner === car ? (
@@ -163,7 +157,7 @@ const Inspection = () => {
                   ))}
                   <td>
                     {editedCarOwner === car ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                      <button className="btn btn-primary" onClick={() => handleSave(car.inspection_number)}>
                         Save
                       </button>
                     ) : (
@@ -171,40 +165,7 @@ const Inspection = () => {
                         Edit
                       </button>
                     )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-
-              {carOwners.map((carOwner, index) => (
-                <tr key={carOwner.inspection_number}>
-                  {Object.entries(carOwner).map(([key, value]) => (
-                    <td key={key}>
-                      {editedCarOwner === index ? (
-                        <input
-                          type="text"
-                          name={key}
-                          value={value}
-                          onChange={(e) => handleInputChange(e, index)}
-                        />
-                      ) : (
-                        <span>{value}</span>
-                      )}
-                    </td>
-                  ))}
-                  <td>
-                    {editedCarOwner === index ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(carOwner.inspection_number)}>
-                        Save
-                      </button>
-                    ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(index)}>
-                        Edit
-                      </button>
-                    )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(carOwner.inspection_number)}>
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.inspection_number)}>
                       Delete
                     </button>
                   </td>

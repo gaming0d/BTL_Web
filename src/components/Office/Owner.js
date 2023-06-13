@@ -31,14 +31,14 @@ const Owner = () => {
     const carToUpdate = carOwners.find((car) => car.owner_code === owner_code);
 
     if (!carToUpdate) {
-      console.error("C with registration number ${owner_code} not found.");
+      console.error(`Car with registration number ${owner_code} not found.`);
       return;
     }
 
     const updatedCar = { ...carToUpdate, ...editedCarOwner };
 
     try {
-      await axios.put('http://localhost:8000/car_owners/${owner_code}/, updatedCar');
+      await axios.put(`http://localhost:8000/car_owners/${owner_code}/`, updatedCar);
       setCarOwners((prevCars) => prevCars.map((car) => (car.owner_code === owner_code ? updatedCar : car)));
       setEditedCarOwner(null);
       // Refresh the car list or show a success message
@@ -50,7 +50,7 @@ const Owner = () => {
 
   const handleDelete = async (owner_code) => {
     try {
-      await axios.delete('http://localhost:8000/car_owners/${owner_code}/');
+      await axios.delete(`http://localhost:8000/car_owners/${owner_code}/`);
       // Refresh the car owner list or show a success message
     } catch (error) {
       console.error(error);

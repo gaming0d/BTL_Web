@@ -4,6 +4,12 @@ import BaseLayout from './Base';
 
 const OwnerCenter = () => {
   const [carOwners, setCarOwners] = useState([]);
+  const [editedCarIndex, setEditedCarIndex] = useState(null);
+
+  const handleEdit = (index) => {
+    console.log(index)
+    setEditedCarIndex(index);
+  };
   const [editedCarOwner, setEditedCarOwner] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
 
@@ -13,10 +19,6 @@ const OwnerCenter = () => {
       .then((data) => setCarOwners(data))
       .catch((error) => console.log(error));
   }, []);
-
-  const handleEdit = (carOwner) => {
-    setEditedCarOwner(carOwner);
-  };
 
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
@@ -29,18 +31,18 @@ const OwnerCenter = () => {
 
   const handleSave = async (owner_code) => {
     const carToUpdate = carOwners.find((car) => car.owner_code === owner_code);
+    handleEdit(-1);
 
     if (!carToUpdate) {
-      console.error(`Car with registration number ${owner_code} not found.`);
+      console.error("C with registration number ${owner_code} not found.");
       return;
     }
 
     const updatedCar = { ...carToUpdate, ...editedCarOwner };
 
     try {
-      await axios.put(`http://localhost:8000/car_owners/${owner_code}/`, updatedCar);
+      await axios.put('http://localhost:8000/car_owners/${owner_code}/, updatedCar');
       setCarOwners((prevCars) => prevCars.map((car) => (car.owner_code === owner_code ? updatedCar : car)));
-      setEditedCarOwner(null);
       // Refresh the car list or show a success message
     } catch (error) {
       console.error(error);
@@ -50,7 +52,7 @@ const OwnerCenter = () => {
 
   const handleDelete = async (owner_code) => {
     try {
-      await axios.delete(`http://localhost:8000/car_owners/${owner_code}/`);
+      await axios.delete('http://localhost:8000/car_owners/${owner_code}/');
       // Refresh the car owner list or show a success message
     } catch (error) {
       console.error(error);
@@ -80,7 +82,7 @@ const OwnerCenter = () => {
           <div className="panel-heading">
             <h6 className="panel-title">Car Owners</h6>
           </div>
-          <table className="table table-hover">
+          <table className="table table-hover" id="dev-table">
 
             <thead>
               <tr>

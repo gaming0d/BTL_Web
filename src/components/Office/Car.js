@@ -5,7 +5,6 @@ import BaseLayout from './Base';
 const Car = ({ customers }) => {
   const [cars, setCars] = useState([]);
   const [editedCarIndex, setEditedCarIndex] = useState(null);
-  // ...
 
   const handleEdit = (index) => {
     console.log(index)

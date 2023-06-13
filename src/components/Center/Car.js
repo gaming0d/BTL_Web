@@ -292,6 +292,38 @@ const CarCenter = ({ customers }) => {
                   </td>
                 </tr>
               ))}
+              {cars.map((car, index) => (
+                <tr key={car.registration_number}>
+                  {Object.entries(car).map(([key, value]) => (
+                    <td key={key}>
+                      {editedCar === index ? (
+                        <input
+                          type="text"
+                          name={key}
+                          value={value}
+                          onChange={(e) => handleInputChange(e, index)}
+                        />
+                      ) : (
+                        <span>{value}</span>
+                      )}
+                    </td>
+                  ))}
+                  <td>
+                    {editedCar === index ? (
+                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                        Save
+                      </button>
+                    ) : (
+                      <button className="btn btn-primary" onClick={() => handleEdit(index)}>
+                        Edit
+                      </button>
+                    )}
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
