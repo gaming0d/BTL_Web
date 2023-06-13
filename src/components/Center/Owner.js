@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 
-const Owner = () => {
+const OwnerCenter = () => {
   const [carOwners, setCarOwners] = useState([]);
   const [editedCarOwner, setEditedCarOwner] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
@@ -21,12 +21,8 @@ const Owner = () => {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCarOwners((prevCars) => {
-      const updatedCars = prevCars.map((car, carIndex) => {
-        if (carIndex === index) {
-          return { ...car, [name]: value };
-        }
-        return car;
-      });
+      const updatedCars = [...prevCars];
+      updatedCars[index] = { ...updatedCars[index], [name]: value };
       return updatedCars;
     });
   };
@@ -56,9 +52,6 @@ const Owner = () => {
     try {
       await axios.delete(`http://localhost:8000/car_owners/${owner_code}/`);
       // Refresh the car owner list or show a success message
-      setCarOwners((prevCarOwners) =>
-        prevCarOwners.filter((carOwner) => carOwner.owner_code !== owner_code)
-      );
     } catch (error) {
       console.error(error);
       // Handle the error
@@ -195,7 +188,7 @@ const Owner = () => {
             </thead>
             <tbody>
               {filteredCars.map((car, index) => (
-                <tr key={car.registration_number}>
+                <tr key={car.owner_code}>
                   {Object.entries(car).map(([key, value]) => (
                     <td key={key}>
                       {editedCarOwner === car ? (
@@ -212,7 +205,7 @@ const Owner = () => {
                   ))}
                   <td>
                     {editedCarOwner === car ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                      <button className="btn btn-primary" onClick={() => handleSave(car.owner_code)}>
                         Save
                       </button>
                     ) : (
@@ -220,39 +213,7 @@ const Owner = () => {
                         Edit
                       </button>
                     )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {carOwners.map((carOwner, index) => (
-                <tr key={carOwner.owner_code}>
-                  {Object.entries(carOwner).map(([key, value]) => (
-                    <td key={key}>
-                      {editedCarOwner === index ? (
-                        <input
-                          type="text"
-                          name={key}
-                          value={value}
-                          onChange={(e) => handleInputChange(e, index)}
-                        />
-                      ) : (
-                        <span>{value}</span>
-                      )}
-                    </td>
-                  ))}
-                  <td>
-                    {editedCarOwner === index ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(carOwner.owner_code)}>
-                        Save
-                      </button>
-                    ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(index)}>
-                        Edit
-                      </button>
-                    )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(carOwner.owner_code)}>
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.owner_code)}>
                       Delete
                     </button>
                   </td>
@@ -266,4 +227,4 @@ const Owner = () => {
   );
 };
 
-export default Owner;
+export default OwnerCenter;

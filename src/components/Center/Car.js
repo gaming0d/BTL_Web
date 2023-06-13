@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 
-const Car = ({ customers }) => {
+const CarCenter = ({ customers }) => {
   const [cars, setCars] = useState([]);
   const [editedCar, setEditedCar] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
@@ -300,4 +300,4 @@ const Car = ({ customers }) => {
   );
 };
 
-export default Car;
+export default CarCenter;

@@ -21,12 +21,8 @@ const InspectionCenter = () => {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCarOwners((prevCars) => {
-      const updatedCars = prevCars.map((car, carIndex) => {
-        if (carIndex === index) {
-          return { ...car, [name]: value };
-        }
-        return car;
-      });
+      const updatedCars = [...prevCars];
+      updatedCars[index] = { ...updatedCars[index], [name]: value };
       return updatedCars;
     });
   };
@@ -56,9 +52,6 @@ const InspectionCenter = () => {
     try {
       await axios.delete(`http://localhost:8000/car_inspections/${inspection_number}/`);
       // Refresh the car owner list or show a success message
-      setCarOwners((prevCarOwners) =>
-        prevCarOwners.filter((carOwner) => carOwner.inspection_number !== inspection_number)
-      );
     } catch (error) {
       console.error(error);
       // Handle the error
@@ -146,7 +139,7 @@ const InspectionCenter = () => {
             </thead>
             <tbody>
               {filteredCars.map((car, index) => (
-                <tr key={car.registration_number}>
+                <tr key={car.inspection_number}>
                   {Object.entries(car).map(([key, value]) => (
                     <td key={key}>
                       {editedCarOwner === car ? (
@@ -163,7 +156,7 @@ const InspectionCenter = () => {
                   ))}
                   <td>
                     {editedCarOwner === car ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
+                      <button className="btn btn-primary" onClick={() => handleSave(car.inspection_number)}>
                         Save
                       </button>
                     ) : (
@@ -171,40 +164,7 @@ const InspectionCenter = () => {
                         Edit
                       </button>
                     )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-
-              {carOwners.map((carOwner, index) => (
-                <tr key={carOwner.inspection_number}>
-                  {Object.entries(carOwner).map(([key, value]) => (
-                    <td key={key}>
-                      {editedCarOwner === index ? (
-                        <input
-                          type="text"
-                          name={key}
-                          value={value}
-                          onChange={(e) => handleInputChange(e, index)}
-                        />
-                      ) : (
-                        <span>{value}</span>
-                      )}
-                    </td>
-                  ))}
-                  <td>
-                    {editedCarOwner === index ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(carOwner.inspection_number)}>
-                        Save
-                      </button>
-                    ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(index)}>
-                        Edit
-                      </button>
-                    )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(carOwner.inspection_number)}>
+                    <button className="btn btn-danger" onClick={() => handleDelete(car.inspection_number)}>
                       Delete
                     </button>
                   </td>
