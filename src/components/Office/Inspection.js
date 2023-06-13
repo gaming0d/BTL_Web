@@ -5,7 +5,15 @@ import BaseLayout from './Base';
 const Inspection = () => {
   const [carOwners, setCarOwners] = useState([]);
   const [editedCarOwner, setEditedCarOwner] = useState(null);
-  const [searchTerms, setSearchTerms] = useState([]);
+  const [searchTerms, setSearchTerms] = useState({
+    inspection_number: '',
+    inspection_date: '',
+    expiration_date: '',
+    inspection_center: '',
+    car: '',
+    owner: ''
+  });
+  
   const [searchAttributes, setSearchAttributes] = useState([
     {
       attribute: 'inspection_number',
