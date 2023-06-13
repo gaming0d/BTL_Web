@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 
-const Car = () => {
+const Car = ({ customers }) => {
   const [cars, setCars] = useState([]);
   const [editedCar, setEditedCar] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
@@ -28,12 +28,8 @@ const Car = () => {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCars((prevCars) => {
-      const updatedCars = prevCars.map((car, carIndex) => {
-        if (carIndex === index) {
-          return { ...car, [name]: value };
-        }
-        return car;
-      });
+      const updatedCars = [...prevCars];
+      updatedCars[index] = { ...updatedCars[index], [name]: value };
       return updatedCars;
     });
   };
@@ -50,7 +46,9 @@ const Car = () => {
 
     try {
       await axios.put(`http://localhost:8000/cars/${registrationNumber}/`, updatedCar);
-      setCars((prevCars) => prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car)));
+      setCars((prevCars) =>
+        prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car))
+      );
       setEditedCar(null);
       // Refresh the car list or show a success message
     } catch (error) {
@@ -59,10 +57,9 @@ const Car = () => {
     }
   };
 
-
   const handleDelete = async (registrationNumber) => {
     try {
-      await axios.delete(`http://localhost:8000/cars/${registrationNumber}/`);
+      await axios.delete(`http://localhost:8000/cars/${registrationNumber}`);
       // Refresh the car list or show a success message
       setCars((prevCars) => prevCars.filter((car) => car.registration_number !== registrationNumber));
     } catch (error) {
@@ -270,7 +267,6 @@ const Car = () => {
                 <th></th>
               </tr>
             </thead>
-
             <tbody>
               {filteredCars.map((car, index) => (
                 <tr key={car.registration_number}>
@@ -294,7 +290,7 @@ const Car = () => {
                         Save
                       </button>
                     ) : (
-                      <button className="btn btn-primary" onClick={() => setEditedCar(index)}>
+                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
                         Edit
                       </button>
                     )}
@@ -370,7 +366,6 @@ const Car = () => {
                 </tr>
               ))}
             </tbody>
-
           </table>
         </div>
       </div>
