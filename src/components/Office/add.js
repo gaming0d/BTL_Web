@@ -54,7 +54,11 @@ const CarForm = () => {
       const carResponses = await axios.get(`http://localhost:8000/cars/${carDetails.owner_code}`);
       const existingOwner = ownerResponse.data;
       console.log(existingOwner);
-      if (carResponses || existingOwner.length > 0)
+      if(setCarDetails.trim() !== '')
+      {
+        setMessage('Please fill all the field');
+      }
+      else if (carResponses.length > 0)
       {
         setMessage('Car id already exist.');
       }
