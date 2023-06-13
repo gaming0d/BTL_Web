@@ -37,14 +37,8 @@ const App = () => {
         <Route path="/cuc/add" element = {<CarForm/>}/>
         <Route path="/cuc/account" element = {<Account/>}/>
         <Route path="/cuc/dashboard" element = {<Dashboard/>}/>
-      </Routes> 
-      <Routes>
-        <Route exact path="/" element={<Login />} />
-        <Route path="/vehicles" element={<VehicleList/>} />
-        <Route path="/upload-vehicle" element={<UploadVehicle />} />
-        <Route path="/monthly-report" element={<MonthlyReport />} />
-        <Route path="/expiring-vehicles" element={<ExpiringVehicles />} />
-        <Route path="/CarList" element={<CarList/>} />
+      
+
         <Route path="/center/listofcar" element={<CarCenter/>} />
         <Route path="/center/listofowner" element={<OwnerCenter/>} />
         <Route path="/center/listofinspection" element={<InspectionCenter/>}/>

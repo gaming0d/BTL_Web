@@ -41,7 +41,7 @@ const Login = () => {
       .then((response) => {
         if (response.ok) {
           if (selectedOption === 'center') {
-            navigate('/center/mainpage');
+            navigate('/center/dashboard');
           } else if (selectedOption === 'cuc') {
             navigate('/cuc/dashboard');
           }
