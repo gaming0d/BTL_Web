@@ -5,14 +5,14 @@ import './Base.css';
 const BaseLayout = ({ customer, request, children }) => {
   return (
     <div>
-        <Helmet>
+      <Helmet>
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
         />
         {/* Add any other external CSS files you need */}
-        </Helmet>
-      <header style={{ paddingTop: '0px' }}>
+      </Helmet>
+      <header>
         <label htmlFor="check">
           <i style={{ paddingLeft: '60px', marginTop: '17px' }} className="fas fa-bars" id="sidebar_btn"></i>
         </label>
@@ -24,7 +24,7 @@ const BaseLayout = ({ customer, request, children }) => {
         </div>
       </header>
 
-      <div className="sidebar" style={{ marginTop: '60px' }}>
+      <div className="sidebar">
         <a href="/cuc/dashboard"><i className="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
         <a href="/cuc/listofcar"><i className="fab fa-product-hunt"></i><span>Car</span></a>
         <a href="/cuc/listofinspection"><i className="fas fa-history"></i><span>Inspection</span></a>
@@ -33,10 +33,10 @@ const BaseLayout = ({ customer, request, children }) => {
         <a href="/cuc/account"><i className="fas fa-sync-alt"></i><span>Account</span></a>
       </div>
 
-      <div className="content">
-        <br /><br /><br /><br /><br />
+      <div className="content" style={{ marginLeft: '360px', padding: '20px', paddingTop: '60px' }}>
+        <br></br><br></br>
         {children}
-        <br /><br /><br />
+        <br></br>
       </div>
     </div>
   );
