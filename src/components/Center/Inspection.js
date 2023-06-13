@@ -143,7 +143,7 @@ const InspectionCenter = () => {
                 <tr key={car.inspection_number}>
                   {Object.entries(car).map(([key, value]) => (
                     <td key={key}>
-                      {editedCarOwner === car ? (
+                      {editedCarIndex === index ? (
                         <input
                           type="text"
                           name={key}
@@ -156,12 +156,12 @@ const InspectionCenter = () => {
                     </td>
                   ))}
                   <td>
-                    {editedCarOwner === car ? (
+                    {editedCarIndex === index ? (
                       <button className="btn btn-primary" onClick={() => handleSave(car.inspection_number)}>
                         Save
                       </button>
                     ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
+                      <button className="btn btn-primary" onClick={() => handleEdit(index)}>
                         Edit
                       </button>
                     )}

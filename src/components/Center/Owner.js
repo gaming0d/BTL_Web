@@ -193,7 +193,7 @@ const OwnerCenter = () => {
                 <tr key={car.owner_code}>
                   {Object.entries(car).map(([key, value]) => (
                     <td key={key}>
-                      {editedCarOwner === car ? (
+                      {editedCarIndex === index ? (
                         <input
                           type="text"
                           name={key}
@@ -206,12 +206,12 @@ const OwnerCenter = () => {
                     </td>
                   ))}
                   <td>
-                    {editedCarOwner === car ? (
+                    {editedCarIndex === index ? (
                       <button className="btn btn-primary" onClick={() => handleSave(car.owner_code)}>
                         Save
                       </button>
                     ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
+                      <button className="btn btn-primary" onClick={() => handleEdit(index)}>
                         Edit
                       </button>
                     )}
