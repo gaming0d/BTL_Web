@@ -33,7 +33,7 @@ const BaseLayout = ({ customer, request, children }) => {
         <a href="/cuc/account"><i className="fas fa-sync-alt"></i><span>Account</span></a>
       </div>
 
-      <div className="content" style={{ marginLeft: '360px', padding: '20px', paddingTop: '60px' }}>
+      <div className="content" style={{ marginLeft: '360px', padding: '20px', paddingTop: 'px' }}>
         <br></br><br></br>
         {children}
         <br></br>

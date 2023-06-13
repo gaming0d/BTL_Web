@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from 'react';
+mport React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 
 const Car = ({ customers }) => {
   const [cars, setCars] = useState([]);
   const [editedCar, setEditedCar] = useState(null);
-  const [searchTerms, setSearchTerms] = useState([]);
-  const [searchAttributes, setSearchAttributes] = useState([
-    {
-      attribute: 'registration_number',
-      value: ''
-    }
-  ]);
+  const [searchTerms, setSearchTerms] = useState({});
 
   useEffect(() => {
     fetch('http://localhost:8000/cars/')
@@ -27,12 +21,8 @@ const Car = ({ customers }) => {
   const handleInputChange = (e, index) => {
     const { name, value } = e.target;
     setCars((prevCars) => {
-      const updatedCars = prevCars.map((car, carIndex) => {
-        if (carIndex === index) {
-          return { ...car, [name]: value };
-        }
-        return car;
-      });
+      const updatedCars = [...prevCars];
+      updatedCars[index] = { ...updatedCars[index], [name]: value };
       return updatedCars;
     });
   };
@@ -41,15 +31,17 @@ const Car = ({ customers }) => {
     const carToUpdate = cars.find((car) => car.registration_number === registrationNumber);
 
     if (!carToUpdate) {
-      console.error(`Car with registration number ${registrationNumber} not found.`);
+      console.error(Car with registration number ${registrationNumber} not found.);
       return;
     }
 
     const updatedCar = { ...carToUpdate, ...editedCar };
 
     try {
-      await axios.put(`http://localhost:8000/cars/${registrationNumber}/`, updatedCar);
-      setCars((prevCars) => prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car)));
+      await axios.put(http://localhost:8000/cars/${registrationNumber}/, updatedCar);
+      setCars((prevCars) =>
+        prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car))
+      );
       setEditedCar(null);
       // Refresh the car list or show a success message
     } catch (error) {
@@ -58,91 +50,14 @@ const Car = ({ customers }) => {
     }
   };
 
-
   const handleDelete = async (registrationNumber) => {
     try {
-      await axios.delete(`http://localhost:8000/cars/${registrationNumber}/`);
+      await axios.delete(http://localhost:8000/cars/${registrationNumber});
       // Refresh the car list or show a success message
-      setCars((prevCars) => prevCars.filter((car) => car.registration_number !== registrationNumber));
     } catch (error) {
       console.error(error);
       // Handle the error
     }
-  };
-
-  const handleSearchAttributeChange = (e, index) => {
-    const { value } = e.target;
-    setSearchAttributes((prevSearchAttributes) => {
-      const updatedSearchAttributes = [...prevSearchAttributes];
-      updatedSearchAttributes[index] = { ...updatedSearchAttributes[index], attribute: value };
-      return updatedSearchAttributes;
-    });
-  };
-
-  const handleSearchValueChange = (e, index) => {
-    const { value } = e.target;
-    setSearchAttributes((prevSearchAttributes) => {
-      const updatedSearchAttributes = [...prevSearchAttributes];
-      updatedSearchAttributes[index] = { ...updatedSearchAttributes[index], value: value };
-      return updatedSearchAttributes;
-    });
-  };
-
-  const handleAddSearchAttribute = () => {
-    setSearchAttributes((prevSearchAttributes) => {
-      const remainingAttributes = searchAttributes.filter((attribute) => attribute.value !== '');
-      return [
-        ...remainingAttributes,
-        {
-          attribute: '',
-          value: ''
-        }
-      ];
-    });
-  };
-
-  const handleRemoveSearchAttribute = (index) => {
-    setSearchAttributes((prevSearchAttributes) =>
-      prevSearchAttributes.filter((_, i) => i !== index)
-    );
-  };
-
-  const handleSearch = () => {
-    const filteredCars = cars.filter((car) =>
-      searchAttributes.every(
-        (attribute) =>
-          car[attribute.attribute]?.toLowerCase().includes(attribute.value?.toLowerCase())
-      )
-    );
-    setSearchTerms(filteredCars);
-  };
-
-  const availableAttributes = [
-    'Registration Number',
-    'Registration Date',
-    'License Plate',
-    'Manufacturer',
-    'Model',
-    'Version',
-    'Engine Capacity',
-    'Power',
-    'Torque',
-    'Transmission',
-    'Seating Capacity',
-    'Length',
-    'Width',
-    'Height',
-    'Weight',
-    'Fuel Consumption',
-    'Suspension',
-    'Braking System',
-    'Purpose',
-    'Owner'
-  ];
-
-  const getAvailableAttributes = () => {
-    const selectedAttributes = searchAttributes.map((attribute) => attribute.attribute);
-    return availableAttributes.filter((attribute) => !selectedAttributes.includes(attribute));
   };
 
   const handleSearchChange = (e, attribute) => {
@@ -344,85 +259,12 @@ const Car = ({ customers }) => {
                 <th></th>
               </tr>
             </thead>
-
             <tbody>
-              {searchTerms.map((car, index) => (
-                <tr key={car.registration_number}>
-                  <td>{car.registration_number}</td>
-                  <td>{car.registration_date}</td>
-                  <td>{car.license_plate}</td>
-                  <td>{car.registered_location}</td>
-                  <td>{car.manufacturer}</td>
-                  <td>{car.model}</td>
-                  <td>{car.version}</td>
-                  <td>{car.engine_capacity}</td>
-                  <td>{car.power}</td>
-                  <td>{car.torque}</td>
-                  <td>{car.transmission}</td>
-                  <td>{car.seating_capacity}</td>
-                  <td>{car.length}</td>
-                  <td>{car.width}</td>
-                  <td>{car.height}</td>
-                  <td>{car.weight}</td>
-                  <td>{car.fuel_consumption}</td>
-                  <td>{car.suspension}</td>
-                  <td>{car.braking_system}</td>
-                  <td>{car.purpose}</td>
-                  <td>{car.owner}</td>
-                  <td>
-                    {editedCar && editedCar.registration_number === car.registration_number ? (
-                      <div>
-                        <button
-                          className="btn btn-success"
-                          onClick={() => handleSave(car.registration_number)}
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => setEditedCar(null)}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <div>
-                        <button
-                          className="btn btn-warning"
-                          onClick={() => handleEdit(car)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => handleDelete(car.registration_number)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                  <td>
-                    {editedCar === car ? (
-                      <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
-                        Save
-                      </button>
-                    ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
-                        Edit
-                      </button>
-                    )}
-                    <button className="btn btn-danger" onClick={() => handleDelete(car.registration_number)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {cars.map((car, index) => (
+              {filteredCars.map((car, index) => (
                 <tr key={car.registration_number}>
                   {Object.entries(car).map(([key, value]) => (
                     <td key={key}>
-                      {editedCar === index ? (
+                      {editedCar === car ? (
                         <input
                           type="text"
                           name={key}
@@ -430,17 +272,17 @@ const Car = ({ customers }) => {
                           onChange={(e) => handleInputChange(e, index)}
                         />
                       ) : (
-                        <span>{value}</span>
+                        value
                       )}
                     </td>
                   ))}
                   <td>
-                    {editedCar === index ? (
+                    {editedCar === car ? (
                       <button className="btn btn-primary" onClick={() => handleSave(car.registration_number)}>
                         Save
                       </button>
                     ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(index)}>
+                      <button className="btn btn-primary" onClick={() => setEditedCar(null)}>
                         Edit
                       </button>
                     )}
@@ -451,7 +293,6 @@ const Car = ({ customers }) => {
                 </tr>
               ))}
             </tbody>
-
           </table>
         </div>
       </div>

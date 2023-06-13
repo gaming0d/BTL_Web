@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BaseLayout from './Base';
 
-const Car = ({ customers }) => {
+const Car = () => {
   const [cars, setCars] = useState([]);
   const [editedCar, setEditedCar] = useState(null);
   const [searchTerms, setSearchTerms] = useState({});
@@ -50,9 +50,7 @@ const Car = ({ customers }) => {
 
     try {
       await axios.put(`http://localhost:8000/cars/${registrationNumber}/`, updatedCar);
-      setCars((prevCars) =>
-        prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car))
-      );
+      setCars((prevCars) => prevCars.map((car) => (car.registration_number === registrationNumber ? updatedCar : car)));
       setEditedCar(null);
       // Refresh the car list or show a success message
     } catch (error) {
@@ -61,9 +59,10 @@ const Car = ({ customers }) => {
     }
   };
 
+
   const handleDelete = async (registrationNumber) => {
     try {
-      await axios.delete(`http://localhost:8000/cars/${registrationNumber}`);
+      await axios.delete(`http://localhost:8000/cars/${registrationNumber}/`);
       // Refresh the car list or show a success message
       setCars((prevCars) => prevCars.filter((car) => car.registration_number !== registrationNumber));
     } catch (error) {
@@ -271,6 +270,7 @@ const Car = ({ customers }) => {
                 <th></th>
               </tr>
             </thead>
+
             <tbody>
               {filteredCars.map((car, index) => (
                 <tr key={car.registration_number}>
@@ -294,7 +294,7 @@ const Car = ({ customers }) => {
                         Save
                       </button>
                     ) : (
-                      <button className="btn btn-primary" onClick={() => handleEdit(car)}>
+                      <button className="btn btn-primary" onClick={() => setEditedCar(index)}>
                         Edit
                       </button>
                     )}
@@ -370,6 +370,7 @@ const Car = ({ customers }) => {
                 </tr>
               ))}
             </tbody>
+
           </table>
         </div>
       </div>
